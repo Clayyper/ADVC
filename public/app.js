@@ -26,7 +26,17 @@ function msg(id, text, type = "ok") {
   el.className = "msg " + type;
 }
 
-function showPage(page) {
+function switchLoginTab(type) {
+  $("tab-admin").classList.toggle("active", type === "admin");
+  $("tab-user").classList.toggle("active", type === "user");
+
+  $("form-admin").classList.toggle("hidden", type !== "admin");
+  $("form-user").classList.toggle("hidden", type !== "user");
+
+  msg("login-msg", "", "");
+}
+
+function showAdminPage(page) {
   ["dashboard", "usuarios", "senha", "futuro"].forEach(p => {
     $("page-" + p).classList.add("hidden");
   });
@@ -54,11 +64,37 @@ async function loginAdmin(event) {
     });
 
     $("login-screen").classList.add("hidden");
-    $("app-screen").classList.remove("hidden");
+    $("admin-screen").classList.remove("hidden");
+    $("user-screen").classList.add("hidden");
+
     $("logged-as").textContent = data.admin.user;
 
     loadDashboard();
     loadUsers();
+  } catch (err) {
+    msg("login-msg", err.message, "error");
+  }
+}
+
+async function loginUser(event) {
+  event.preventDefault();
+
+  try {
+    const data = await api("/api/auth/user/login", {
+      method: "POST",
+      body: JSON.stringify({
+        userCode: $("login-user-code").value.trim(),
+        userToken: $("login-user-token").value.trim()
+      })
+    });
+
+    $("login-screen").classList.add("hidden");
+    $("admin-screen").classList.add("hidden");
+    $("user-screen").classList.remove("hidden");
+
+    $("user-logged-as").textContent = `${data.user.name} (${data.user.userCode})`;
+    $("user-name-view").textContent = data.user.name;
+    $("user-code-view").textContent = data.user.userCode;
   } catch (err) {
     msg("login-msg", err.message, "error");
   }
@@ -278,11 +314,17 @@ function formatDate(value) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  $("tab-admin").onclick = () => switchLoginTab("admin");
+  $("tab-user").onclick = () => switchLoginTab("user");
+
   $("form-admin").onsubmit = loginAdmin;
-  $("btn-logout").onclick = logout;
+  $("form-user").onsubmit = loginUser;
+
+  $("btn-admin-logout").onclick = logout;
+  $("btn-user-logout").onclick = logout;
 
   document.querySelectorAll(".menu button").forEach(btn => {
-    btn.onclick = () => showPage(btn.dataset.page);
+    btn.onclick = () => showAdminPage(btn.dataset.page);
   });
 
   $("btn-suggest-code").onclick = suggestUserCode;

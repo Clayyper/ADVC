@@ -1,6 +1,6 @@
-# AVDC v2.3 - Banco Administrativo
+# AVDC v2.4 - Banco Administrativo + Login do Usuário
 
-Esta versão separa o projeto em uma primeira etapa limpa:
+Esta versão valida a segunda etapa do projeto:
 
 - Sem GitHub.
 - Sem OAuth.
@@ -63,3 +63,26 @@ Depois que essa parte estiver validada, implementar:
 4. Índice.
 5. Busca.
 6. IA como plugin opcional.
+
+
+## Novo na v2.4
+
+Agora o usuário comum também consegue logar usando:
+
+```txt
+Código do usuário
+Token gerado pelo admin
+```
+
+Fluxo:
+
+```txt
+Admin cria usuário
+Admin copia token
+Usuário entra na aba "Usuário comum"
+Usuário informa código + token
+Sistema valida no banco
+Usuário entra no painel próprio
+```
+
+Ainda não há GitHub nesta versão.

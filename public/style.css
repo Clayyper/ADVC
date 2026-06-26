@@ -336,3 +336,24 @@ button {
     width:100%;
   }
 }
+
+
+.tabs {
+  display:flex;
+  margin:22px 0;
+  border-bottom:2px solid var(--card-bg-light);
+}
+
+.tab-btn {
+  flex:1;
+  background:none;
+  border:0;
+  color:var(--text-support);
+  padding:12px;
+  font-weight:bold;
+}
+
+.tab-btn.active {
+  color:var(--primary-color);
+  border-bottom:2px solid var(--primary-color);
+}

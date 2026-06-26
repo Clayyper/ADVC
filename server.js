@@ -1,5 +1,5 @@
 /**
- * AVDC v2.3
+ * AVDC v2.4
  * Núcleo administrativo sem GitHub.
  *
  * Objetivo desta etapa:
@@ -49,11 +49,11 @@ app.get("/health", (req, res) => {
   res.json({
     ok: true,
     app: "AVDC",
-    version: "2.3.0",
+    version: "2.4.0",
     module: "admin-db"
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`AVDC Admin DB v2.3 rodando na porta ${PORT}`);
+  console.log(`AVDC Admin DB v2.4 rodando na porta ${PORT}`);
 });

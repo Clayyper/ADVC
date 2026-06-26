@@ -1,7 +1,7 @@
 {
   "name": "avdc-admin-db-v2-3",
-  "version": "2.3.0",
-  "description": "AVDC v2.3 - Banco administrativo sem GitHub",
+  "version": "2.4.0",
+  "description": "AVDC v2.4 - Admin DB com login de usuário por código e token",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

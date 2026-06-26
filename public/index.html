@@ -3,16 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVDC v2.3 - Administração</title>
+<title>AVDC v2.4 - Administração e Usuário</title>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
 <div class="container login-container" id="login-screen">
-  <div class="version-badge">v2.3</div>
+  <div class="version-badge">v2.4</div>
 
-  <h2>AVDC - Administração</h2>
-  <p>Primeira etapa: banco administrativo do AVDC, sem GitHub.</p>
+  <h2>AVDC - Acesso</h2>
+  <p>Admin administra. Usuário entra com código e token.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-admin">Administrador</button>
+    <button class="tab-btn" id="tab-user">Usuário comum</button>
+  </div>
 
   <form id="form-admin">
     <label>Usuário administrador</label>
@@ -21,20 +26,30 @@
     <label>Senha administrador</label>
     <input id="admin-pass" type="password" placeholder="Senha inicial: admin123" required>
 
-    <button class="btn btn-full">Entrar</button>
+    <button class="btn btn-full">Entrar como Admin</button>
+  </form>
+
+  <form id="form-user" class="hidden">
+    <label>Código do usuário</label>
+    <input id="login-user-code" placeholder="Ex: pedro.silva" required>
+
+    <label>Token do usuário</label>
+    <input id="login-user-token" placeholder="Token gerado pelo admin" required>
+
+    <button class="btn btn-full">Entrar como Usuário</button>
   </form>
 
   <div id="login-msg" class="msg"></div>
 
   <div class="note">
     <p><strong>Escopo desta versão:</strong></p>
-    <p>Admin, banco de usuários, código único e token.</p>
-    <p>GitHub será implementado depois, como módulo separado.</p>
+    <p>Admin cria o usuário. Usuário valida acesso com código + token.</p>
+    <p>GitHub será a próxima etapa, depois que o login do usuário estiver validado.</p>
   </div>
 </div>
 
-<div class="container hidden" id="app-screen">
-  <div class="version-badge">v2.3</div>
+<div class="container hidden" id="admin-screen">
+  <div class="version-badge">v2.4</div>
 
   <div class="header">
     <div>
@@ -42,7 +57,7 @@
       <p>Logado como: <strong id="logged-as">admin</strong></p>
     </div>
 
-    <button class="btn btn-danger" id="btn-logout">Sair</button>
+    <button class="btn btn-danger" id="btn-admin-logout">Sair</button>
   </div>
 
   <div class="grid">
@@ -71,9 +86,8 @@
           </div>
 
           <div class="note">
-            <p>Este banco pertence ao AVDC.</p>
-            <p>Ele não fica dentro do GitHub.</p>
-            <p>O GitHub será apenas uma conexão futura feita pelo próprio usuário.</p>
+            <p>O cadastro do usuário pertence ao banco do AVDC.</p>
+            <p>GitHub ainda não entra nesta etapa.</p>
           </div>
         </div>
       </section>
@@ -142,16 +156,47 @@
           <h3>Próximas etapas</h3>
 
           <div class="note">
-            <p><strong>Etapa 1:</strong> Banco administrativo. Concluindo agora.</p>
-            <p><strong>Etapa 2:</strong> Login do usuário comum.</p>
+            <p><strong>Etapa 1:</strong> Banco administrativo. OK.</p>
+            <p><strong>Etapa 2:</strong> Login do usuário comum. Esta versão.</p>
             <p><strong>Etapa 3:</strong> Conexão GitHub por usuário.</p>
             <p><strong>Etapa 4:</strong> Escolha de repositório.</p>
             <p><strong>Etapa 5:</strong> Índice e busca.</p>
-            <p><strong>Etapa futura:</strong> IA como plugin opcional.</p>
           </div>
         </div>
       </section>
     </main>
+  </div>
+</div>
+
+<div class="container hidden" id="user-screen">
+  <div class="version-badge">v2.4</div>
+
+  <div class="header">
+    <div>
+      <h2>Painel do Usuário AVDC</h2>
+      <p>Logado como: <strong id="user-logged-as">-</strong></p>
+    </div>
+
+    <button class="btn btn-danger" id="btn-user-logout">Sair</button>
+  </div>
+
+  <div class="card">
+    <h3>Acesso validado</h3>
+
+    <div class="note">
+      <p><strong>Nome:</strong> <span id="user-name-view">-</span></p>
+      <p><strong>Código:</strong> <span id="user-code-view" class="code">-</span></p>
+      <p><strong>Status:</strong> <span class="badge badge-ok">ativo</span></p>
+    </div>
+
+    <p>O usuário já está autenticado no AVDC usando código + token.</p>
+    <p>A próxima etapa será conectar o GitHub desse usuário.</p>
+  </div>
+
+  <div class="card">
+    <h3>GitHub</h3>
+    <p><span class="badge badge-warning">Em desenvolvimento</span></p>
+    <p>Nesta etapa ainda não há conexão GitHub. Primeiro estamos validando o login do usuário.</p>
   </div>
 </div>
 
