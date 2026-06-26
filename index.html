@@ -3,91 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVDC v1.5</title>
+
+<title>AVDC v1.7 - Protótipo Funcional</title>
+
+<!-- =========================================================
+     AVDC v1.7
+     Protótipo em arquivo único: index.html
+
+     Objetivo desta versão:
+     - Manter tudo em um único arquivo para facilitar teste.
+     - Simular um banco local usando localStorage.
+     - Validar login de administrador.
+     - Permitir troca da senha do admin.
+     - Cadastrar usuários com token.
+     - Ligar cada usuário a:
+       1. diretório de dados;
+       2. diretório de índice;
+       3. nome da interface IA;
+       4. token da IA.
+     - Manter a filosofia AVDC:
+       dados originais são somente leitura;
+       índice separado;
+       IA opcional;
+       plugins preparados para futuro.
+========================================================= -->
 
 <style>
+/* =========================================================
+   BLOCO 1 — TEMA VISUAL / CSS
+   Mantém o visual escuro e simples para o painel AVDC.
+========================================================= */
+
 :root {
-    --bg: #121214;
-    --card: #202024;
-    --card2: #29292e;
-    --text: #e1e1e6;
-    --muted: #a8a8b3;
-    --primary: #8257e5;
+    --bg-color: #121214;
+    --card-bg: #202024;
+    --card-bg-light: #29292e;
+    --text-color: #e1e1e6;
+    --text-support: #a8a8b3;
+    --primary-color: #8257e5;
     --primary-hover: #9466ff;
     --danger: #f75a68;
     --success: #00b37e;
     --warning: #fba94c;
+    --border: #3a3a40;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background: var(--bg);
-    color: var(--text);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     min-height: 100vh;
     padding: 20px;
 }
 
 .container {
-    background: var(--card);
-    max-width: 980px;
-    margin: auto;
-    padding: 30px;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    padding: 32px;
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     position: relative;
 }
 
-.login-box {
-    max-width: 450px;
+.login-container {
+    max-width: 460px;
     margin-top: 8vh;
 }
 
-.version {
+.version-badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    background: var(--card2);
+    top: 14px;
+    right: 14px;
+    background: var(--card-bg-light);
     padding: 4px 8px;
     border-radius: 4px;
+    color: var(--text-support);
     font-size: 12px;
-    color: var(--muted);
     font-family: monospace;
 }
 
-h2, h3 {
-    margin-bottom: 18px;
+h1, h2, h3 {
+    margin-bottom: 16px;
 }
 
 p {
-    color: var(--muted);
-    margin-bottom: 12px;
+    color: var(--text-support);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+small {
+    color: var(--text-support);
 }
 
 .tabs {
     display: flex;
-    margin-bottom: 22px;
-    border-bottom: 2px solid var(--card2);
+    margin: 22px 0;
+    border-bottom: 2px solid var(--card-bg-light);
 }
 
-.tab {
+.tab-btn {
     flex: 1;
     background: none;
     border: none;
-    color: var(--muted);
+    color: var(--text-support);
     padding: 12px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 14px;
 }
 
-.tab.active {
-    color: var(--primary);
-    border-bottom: 2px solid var(--primary);
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
     margin-bottom: -2px;
 }
 
@@ -98,23 +134,28 @@ p {
 label {
     display: block;
     margin-bottom: 7px;
-    color: var(--muted);
+    color: var(--text-support);
     font-size: 14px;
 }
 
-input {
+input, textarea, select {
     width: 100%;
     padding: 12px;
-    border: 1px solid var(--card2);
     border-radius: 4px;
-    background: var(--bg);
-    color: white;
+    border: 1px solid var(--border);
+    background-color: var(--bg-color);
+    color: #fff;
     font-size: 15px;
 }
 
-input:focus {
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: var(--primary);
+    border-color: var(--primary-color);
 }
 
 button {
@@ -122,127 +163,190 @@ button {
 }
 
 .btn {
-    width: 100%;
-    padding: 13px;
+    padding: 12px 16px;
+    background-color: var(--primary-color);
     border: none;
     border-radius: 4px;
-    background: var(--primary);
-    color: white;
+    color: #fff;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .btn:hover {
-    background: var(--primary-hover);
+    background-color: var(--primary-hover);
+}
+
+.btn-full {
+    width: 100%;
 }
 
 .btn-success {
-    background: var(--success);
+    background-color: var(--success);
 }
 
 .btn-danger {
     background: transparent;
     color: var(--danger);
     border: 1px solid var(--danger);
-    padding: 8px 14px;
-    border-radius: 4px;
 }
 
-.msg {
-    margin-top: 14px;
-    padding: 10px;
-    border-radius: 4px;
-    display: none;
+.btn-warning {
+    background-color: var(--warning);
+    color: #121214;
 }
 
-.msg.error {
-    display: block;
-    background: rgba(247,90,104,0.12);
-    color: var(--danger);
+.btn-small {
+    padding: 7px 10px;
+    font-size: 12px;
 }
 
-.msg.ok {
-    display: block;
-    background: rgba(0,179,126,0.12);
-    color: var(--success);
+.hidden {
+    display: none !important;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
+    gap: 20px;
     align-items: center;
-    border-bottom: 1px solid var(--card2);
     padding-bottom: 16px;
     margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
 }
 
 .grid {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 24px;
 }
 
 .menu {
-    background: var(--card2);
+    background-color: var(--card-bg-light);
     padding: 16px;
     border-radius: 6px;
+    height: fit-content;
 }
 
 .menu button {
     width: 100%;
     background: transparent;
     border: none;
-    color: var(--text);
+    color: var(--text-color);
     text-align: left;
-    padding: 10px;
+    padding: 11px;
     border-radius: 4px;
     margin-bottom: 6px;
 }
 
 .menu button.active,
 .menu button:hover {
-    background: var(--primary);
+    background: var(--primary-color);
 }
 
 .card {
-    background: var(--card2);
+    background-color: var(--card-bg-light);
     padding: 22px;
     border-radius: 6px;
     margin-bottom: 16px;
 }
 
+.card-dark {
+    background-color: var(--bg-color);
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.row > * {
+    flex: 1;
+}
+
 .user-item,
-.result-item {
-    background: var(--bg);
-    padding: 12px;
+.result-item,
+.status-item {
+    background-color: var(--bg-color);
+    padding: 14px;
     border-radius: 4px;
     margin-bottom: 10px;
+}
+
+.user-item-header,
+.result-item-header {
     display: flex;
     justify-content: space-between;
     gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
 .badge {
-    background: var(--primary);
+    display: inline-block;
+    background-color: var(--primary-color);
     padding: 4px 8px;
     border-radius: 4px;
     font-family: monospace;
     font-size: 13px;
+    color: white;
 }
 
-.status-ok {
-    color: var(--success);
+.badge-ok {
+    background-color: var(--success);
 }
 
-.status-warning {
-    color: var(--warning);
+.badge-warning {
+    background-color: var(--warning);
+    color: #121214;
 }
 
-.hidden {
+.badge-danger {
+    background-color: var(--danger);
+}
+
+.msg {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 4px;
     display: none;
 }
 
-@media(max-width: 760px) {
+.msg.ok {
+    display: block;
+    background: rgba(0,179,126,0.14);
+    color: var(--success);
+}
+
+.msg.error {
+    display: block;
+    background: rgba(247,90,104,0.14);
+    color: var(--danger);
+}
+
+.msg.warning {
+    display: block;
+    background: rgba(251,169,76,0.14);
+    color: var(--warning);
+}
+
+.code {
+    font-family: monospace;
+    color: #fff;
+    word-break: break-all;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 18px 0;
+}
+
+@media (max-width: 780px) {
     .grid {
         grid-template-columns: 1fr;
     }
@@ -250,7 +354,14 @@ button {
     .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+    }
+
+    .row {
+        display: block;
+    }
+
+    .row > * {
+        margin-bottom: 10px;
     }
 }
 </style>
@@ -258,49 +369,69 @@ button {
 
 <body>
 
-<div class="container login-box" id="login-screen">
-    <div class="version">v1.5</div>
+<!-- =========================================================
+     BLOCO 2 — TELA DE LOGIN
+     Possui dois modos:
+     - Administrador: usuário + senha.
+     - Usuário comum: código + token.
+========================================================= -->
+
+<div class="container login-container" id="login-screen">
+    <div class="version-badge">v1.7</div>
 
     <h2>AVDC - Acesso</h2>
+    <p>Protótipo local com cadastro de usuários e configurações individuais.</p>
 
     <div class="tabs">
-        <button class="tab active" id="tab-admin" onclick="switchTab('admin')">Administrador</button>
-        <button class="tab" id="tab-user" onclick="switchTab('user')">Usuário</button>
+        <button class="tab-btn active" id="tab-admin" onclick="AVDC_UI.switchTab('admin')">Administrador</button>
+        <button class="tab-btn" id="tab-user" onclick="AVDC_UI.switchTab('user')">Usuário comum</button>
     </div>
 
-    <form id="admin-form" onsubmit="loginAdmin(event)">
+    <form id="form-admin" onsubmit="AVDC_AUTH.loginAdmin(event)">
         <div class="form-group">
-            <label>Usuário administrador</label>
-            <input id="admin-user" type="text" value="admin" required>
+            <label for="admin-user">Usuário administrador</label>
+            <input type="text" id="admin-user" value="admin" required>
         </div>
 
         <div class="form-group">
-            <label>Senha administrador</label>
-            <input id="admin-pass" type="password" placeholder="Senha: admin123" required>
+            <label for="admin-pass">Senha administrador</label>
+            <input type="password" id="admin-pass" placeholder="Senha inicial: admin123" required>
         </div>
 
-        <button class="btn" type="submit">Entrar como Admin</button>
+        <button type="submit" class="btn btn-full">Entrar como Admin</button>
     </form>
 
-    <form id="user-form" class="hidden" onsubmit="loginUser(event)">
+    <form id="form-user" class="hidden" onsubmit="AVDC_AUTH.loginUser(event)">
         <div class="form-group">
-            <label>ID do usuário</label>
-            <input id="login-user-id" type="text" placeholder="Ex: joao" required>
+            <label for="login-user-code">Código do usuário</label>
+            <input type="text" id="login-user-code" placeholder="Ex: clay" required>
         </div>
 
         <div class="form-group">
-            <label>Token diário</label>
-            <input id="login-user-token" type="text" placeholder="Ex: 123456" required>
+            <label for="login-user-token">Token do usuário</label>
+            <input type="text" id="login-user-token" placeholder="Ex: 123456" required>
         </div>
 
-        <button class="btn" type="submit">Validar e Entrar</button>
+        <button type="submit" class="btn btn-full">Validar e entrar</button>
     </form>
 
     <div id="login-msg" class="msg"></div>
+
+    <hr>
+
+    <small>
+        Observação: nesta fase, o banco é local no navegador usando localStorage.
+        Não use tokens reais de produção neste protótipo.
+    </small>
 </div>
 
+<!-- =========================================================
+     BLOCO 3 — PAINEL PRINCIPAL
+     Interface principal após login.
+========================================================= -->
+
 <div class="container hidden" id="app-screen">
-    <div class="version">v1.5</div>
+    <div class="version-badge">v1.7</div>
 
     <div class="header">
         <div>
@@ -308,287 +439,856 @@ button {
             <p>Logado como: <strong id="logged-as"></strong></p>
         </div>
 
-        <button class="btn-danger" onclick="logout()">Sair</button>
+        <button class="btn btn-danger" onclick="AVDC_AUTH.logout()">Sair</button>
     </div>
 
     <div class="grid">
-        <div class="menu">
-            <button class="active" onclick="showPage('buscar', this)">Pesquisar</button>
-            <button onclick="showPage('repositorio', this)">Repositório de Dados</button>
-            <button onclick="showPage('indice', this)">Diretório de Índice</button>
-            <button onclick="showPage('plugins', this)">Plugins</button>
-            <button id="admin-menu-btn" onclick="showPage('admin', this)">Admin</button>
-        </div>
+
+        <!-- MENU LATERAL -->
+        <nav class="menu">
+            <button class="active" onclick="AVDC_UI.showPage('buscar', this)">Pesquisar</button>
+            <button onclick="AVDC_UI.showPage('repositorio', this)">Repositório de Dados</button>
+            <button onclick="AVDC_UI.showPage('indice', this)">Diretório de Índice</button>
+            <button onclick="AVDC_UI.showPage('ia', this)">Interface IA</button>
+            <button onclick="AVDC_UI.showPage('plugins', this)">Plugins</button>
+            <button onclick="AVDC_UI.showPage('sobre', this)">Sobre</button>
+            <button id="admin-menu-btn" onclick="AVDC_UI.showPage('admin', this)">Admin</button>
+        </nav>
 
         <main>
+
+            <!-- =================================================
+                 PÁGINA: PESQUISA
+                 Ainda é uma busca simulada.
+                 No backend real, esta busca consultará SQLite FTS5,
+                 ripgrep ou outro mecanismo.
+            ================================================== -->
             <section id="page-buscar">
                 <div class="card">
                     <h3>Busca AVDC</h3>
-                    <p>As buscas usam o índice existente. O AVDC não altera os arquivos originais.</p>
+                    <p>
+                        O sistema usa o índice existente para responder rápido.
+                        O AVDC não altera os arquivos originais.
+                    </p>
 
-                    <div class="form-group">
-                        <label>Pesquisar</label>
-                        <input id="search-input" placeholder="Ex: Samba, Linux, Progress..." onkeydown="if(event.key==='Enter') searchMock()">
+                    <div class="status-item">
+                        <p><strong>Repositório atual:</strong> <span id="status-data-dir" class="code">-</span></p>
+                        <p><strong>Índice atual:</strong> <span id="status-index-dir" class="code">-</span></p>
+                        <p><strong>Status do índice:</strong> <span id="status-index-state" class="badge badge-ok">Índice existente</span></p>
                     </div>
 
-                    <button class="btn" onclick="searchMock()">Buscar</button>
+                    <div class="form-group">
+                        <label for="search-input">Pesquisar</label>
+                        <input
+                            type="text"
+                            id="search-input"
+                            placeholder="Ex: Samba, Linux, Progress, SQL..."
+                            onkeydown="if(event.key === 'Enter') AVDC_SEARCH.search()"
+                        >
+                    </div>
+
+                    <button class="btn" onclick="AVDC_SEARCH.search()">Buscar</button>
                 </div>
 
                 <div class="card">
                     <h3>Resultados</h3>
-                    <div id="results">
+                    <div id="results-container">
                         <p>Nenhuma busca realizada.</p>
                     </div>
                 </div>
             </section>
 
+            <!-- =================================================
+                 PÁGINA: REPOSITÓRIO
+                 Caminho onde ficam os dados do usuário.
+                 Regra AVDC: somente leitura.
+            ================================================== -->
             <section id="page-repositorio" class="hidden">
                 <div class="card">
-                    <h3>Configuração do Repositório</h3>
-                    <p>Fonte dos dados do usuário. Acesso somente leitura.</p>
+                    <h3>Configuração do Repositório de Dados</h3>
+                    <p>
+                        Este diretório representa a fonte original dos dados.
+                        O AVDC deve apenas ler esse conteúdo, sem alterar arquivos.
+                    </p>
 
                     <div class="form-group">
-                        <label>Caminho do repositório</label>
-                        <input id="repo-path" value="/home/clay/Conhecimento">
+                        <label for="cfg-data-dir">Diretório de dados</label>
+                        <input type="text" id="cfg-data-dir" placeholder="/home/usuario/Conhecimento">
                     </div>
 
-                    <button class="btn">Salvar configuração</button>
+                    <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('repo-msg')">Salvar repositório</button>
+
+                    <div id="repo-msg" class="msg"></div>
                 </div>
             </section>
 
+            <!-- =================================================
+                 PÁGINA: ÍNDICE
+                 Diretório separado onde o AVDC guarda índice,
+                 cache e metadados.
+            ================================================== -->
             <section id="page-indice" class="hidden">
                 <div class="card">
-                    <h3>Diretório de Índice</h3>
-                    <p>O índice é separado dos dados originais e pode ser reconstruído quando o usuário quiser.</p>
+                    <h3>Configuração do Diretório de Índice</h3>
+                    <p>
+                        O índice é separado dos dados originais.
+                        Ele pode ser apagado ou reconstruído sem afetar o repositório.
+                    </p>
 
                     <div class="form-group">
-                        <label>Caminho do índice</label>
-                        <input id="index-path" value="/home/clay/.avdc/index">
+                        <label for="cfg-index-dir">Diretório de índice</label>
+                        <input type="text" id="cfg-index-dir" placeholder="/home/usuario/.avdc/index">
                     </div>
 
-                    <p>Status: <strong class="status-ok">Índice existente</strong></p>
-                    <p>Última atualização: <span id="index-date">26/06/2026</span></p>
+                    <div class="status-item">
+                        <p><strong>Status:</strong> <span class="badge badge-ok">Índice existente</span></p>
+                        <p><strong>Última atualização:</strong> <span id="index-last-update">Nunca atualizado nesta sessão</span></p>
+                        <p><small>A busca depende do índice para responder rápido.</small></p>
+                    </div>
 
-                    <button class="btn btn-success" onclick="rebuildIndex()">Atualizar índice</button>
+                    <div class="row">
+                        <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('index-msg')">Salvar diretório</button>
+                        <button class="btn btn-warning" onclick="AVDC_INDEX.rebuild()">Atualizar índice</button>
+                    </div>
+
                     <div id="index-msg" class="msg"></div>
                 </div>
             </section>
 
+            <!-- =================================================
+                 PÁGINA: IA
+                 IA é opcional e ligada ao usuário.
+                 A versão atual apenas salva nome e token.
+            ================================================== -->
+            <section id="page-ia" class="hidden">
+                <div class="card">
+                    <h3>Configuração da Interface IA</h3>
+                    <p>
+                        A IA é opcional. O Core do AVDC deve funcionar sem IA.
+                        Esta configuração fica ligada ao código do usuário.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="cfg-ai-name">Nome da interface IA</label>
+                        <input type="text" id="cfg-ai-name" placeholder="Ex: OpenAI, Ollama, LM Studio">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cfg-ai-token">Token da IA</label>
+                        <input type="password" id="cfg-ai-token" placeholder="Token ou chave da IA">
+                    </div>
+
+                    <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('ia-msg')">Salvar IA</button>
+
+                    <div id="ia-msg" class="msg"></div>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 PÁGINA: PLUGINS
+                 Placeholder para arquitetura futura.
+            ================================================== -->
             <section id="page-plugins" class="hidden">
                 <div class="card">
                     <h3>Plugins</h3>
-                    <p class="status-warning">Em desenvolvimento</p>
+                    <p>
+                        Em desenvolvimento.
+                    </p>
+
+                    <div class="card-dark">
+                        <p><strong>Plugin Pasta Local:</strong> futuro adaptador somente leitura.</p>
+                        <p><strong>Plugin Git:</strong> futuro adaptador para repositórios Git.</p>
+                        <p><strong>Plugin IA:</strong> futuro recurso opcional, nunca obrigatório.</p>
+                    </div>
                 </div>
             </section>
 
+            <!-- =================================================
+                 PÁGINA: SOBRE
+                 Registra os princípios do AVDC dentro do próprio arquivo.
+            ================================================== -->
+            <section id="page-sobre" class="hidden">
+                <div class="card">
+                    <h3>Sobre o AVDC</h3>
+
+                    <p><strong>Princípios:</strong></p>
+                    <div class="card-dark">
+                        <p>1. Os dados pertencem ao usuário.</p>
+                        <p>2. O AVDC nunca altera os dados originais.</p>
+                        <p>3. O AVDC possui apenas permissão de leitura sobre a fonte de dados.</p>
+                        <p>4. Índices, cache e metadados ficam em diretório separado.</p>
+                        <p>5. A IA é opcional e nunca requisito para o funcionamento.</p>
+                        <p>6. Novas funcionalidades devem nascer como plugins.</p>
+                        <p>7. O Core deve permanecer pequeno, estável e previsível.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 PÁGINA: ADMIN
+                 Apenas administrador acessa.
+                 Permite:
+                 - trocar senha do admin;
+                 - criar usuários;
+                 - visualizar banco local;
+                 - excluir usuários.
+            ================================================== -->
             <section id="page-admin" class="hidden">
                 <div class="card">
-                    <h3>Gerar usuário comum</h3>
-
-                    <form onsubmit="createUser(event)">
-                        <div class="form-group">
-                            <label>ID do usuário</label>
-                            <input id="new-user-id" placeholder="Ex: joao.silva" required>
-                        </div>
-
-                        <button class="btn btn-success" type="submit">Gerar token</button>
-                    </form>
-
-                    <div id="create-msg" class="msg"></div>
+                    <h3>Administração</h3>
+                    <p>
+                        Área restrita ao administrador. Aqui são criados usuários
+                        e configurados os dados iniciais de cada um.
+                    </p>
                 </div>
 
                 <div class="card">
-                    <h3>Usuários cadastrados</h3>
-                    <div id="users-list"></div>
+                    <h3>Trocar senha do administrador</h3>
+
+                    <div class="form-group">
+                        <label for="new-admin-pass">Nova senha do admin</label>
+                        <input type="password" id="new-admin-pass" placeholder="Digite a nova senha">
+                    </div>
+
+                    <button class="btn" onclick="AVDC_ADMIN.changeAdminPassword()">Salvar nova senha</button>
+
+                    <div id="admin-pass-msg" class="msg"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Cadastrar usuário</h3>
+
+                    <div class="form-group">
+                        <label for="new-user-code">Código do usuário</label>
+                        <input type="text" id="new-user-code" placeholder="Ex: clay">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-user-data-dir">Diretório de dados</label>
+                        <input type="text" id="new-user-data-dir" placeholder="/home/clay/Conhecimento">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-user-index-dir">Diretório de índice</label>
+                        <input type="text" id="new-user-index-dir" placeholder="/home/clay/.avdc/index">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-user-ai-name">Nome da interface IA</label>
+                        <input type="text" id="new-user-ai-name" placeholder="Ex: OpenAI, Ollama, LM Studio">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-user-ai-token">Token da IA</label>
+                        <input type="password" id="new-user-ai-token" placeholder="Token opcional">
+                    </div>
+
+                    <button class="btn btn-success" onclick="AVDC_ADMIN.createUser()">Criar usuário e gerar token</button>
+
+                    <div id="create-user-msg" class="msg"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Banco local de usuários</h3>
+                    <div id="users-list-container">
+                        <p>Nenhum usuário cadastrado.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Ferramentas do protótipo</h3>
+                    <p>
+                        Use com cuidado. Isso apaga somente o banco local do navegador,
+                        não mexe em nenhum arquivo do computador.
+                    </p>
+                    <button class="btn btn-danger" onclick="AVDC_ADMIN.resetDatabase()">Resetar banco local</button>
+                    <div id="reset-msg" class="msg"></div>
                 </div>
             </section>
+
         </main>
     </div>
 </div>
 
 <script>
-let users = JSON.parse(localStorage.getItem("avdc_users_v15")) || [];
+/* =========================================================
+   BLOCO 4 — CONFIGURAÇÃO GLOBAL DO AVDC
+   Centraliza informações importantes da versão atual.
+========================================================= */
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "admin123";
+const AVDC = {
+    version: "1.7",
+    dbKey: "avdc_db_v17",
+    repositoryMode: "read-only",
+    indexMode: "separate-directory",
+    aiRequired: false,
+    pluginStatus: "em desenvolvimento"
+};
+</script>
 
-function saveUsers() {
-    localStorage.setItem("avdc_users_v15", JSON.stringify(users));
-}
+<script>
+/* =========================================================
+   BLOCO 5 — BANCO LOCAL
+   Nesta versão, o banco é o localStorage do navegador.
 
-function setMessage(id, text, type) {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = "msg " + type;
-}
+   Estrutura:
+   db = {
+     admin: {
+       user: "admin",
+       password: "admin123"
+     },
+     users: [
+       {
+         code,
+         userToken,
+         dataDir,
+         indexDir,
+         aiName,
+         aiToken,
+         createdAt,
+         indexLastUpdate
+       }
+     ]
+   }
 
-function clearMessage(id) {
-    const el = document.getElementById(id);
-    el.textContent = "";
-    el.className = "msg";
-}
+   Observação:
+   localStorage não é banco seguro.
+   Serve apenas para prototipar fluxo e interface.
+========================================================= */
 
-function switchTab(type) {
-    clearMessage("login-msg");
+const AVDC_DB = {
+    defaultDB() {
+        return {
+            admin: {
+                user: "admin",
+                password: "admin123"
+            },
+            users: []
+        };
+    },
 
-    document.getElementById("tab-admin").classList.toggle("active", type === "admin");
-    document.getElementById("tab-user").classList.toggle("active", type === "user");
+    load() {
+        const raw = localStorage.getItem(AVDC.dbKey);
 
-    document.getElementById("admin-form").classList.toggle("hidden", type !== "admin");
-    document.getElementById("user-form").classList.toggle("hidden", type !== "user");
-}
+        if (!raw) {
+            const db = this.defaultDB();
+            this.save(db);
+            return db;
+        }
 
-function loginAdmin(event) {
-    event.preventDefault();
+        try {
+            return JSON.parse(raw);
+        } catch (error) {
+            console.error("Erro ao ler banco local:", error);
+            const db = this.defaultDB();
+            this.save(db);
+            return db;
+        }
+    },
 
-    const user = document.getElementById("admin-user").value.trim();
-    const pass = document.getElementById("admin-pass").value.trim();
+    save(db) {
+        localStorage.setItem(AVDC.dbKey, JSON.stringify(db));
+    },
 
-    if (user !== ADMIN_USER || pass !== ADMIN_PASS) {
-        setMessage("login-msg", "Administrador ou senha inválidos.", "error");
-        return;
+    reset() {
+        localStorage.removeItem(AVDC.dbKey);
+        window.AVDC_STATE.db = this.load();
     }
+};
 
-    openApp("Administrador", "admin");
-}
+/* Estado global da sessão atual */
+window.AVDC_STATE = {
+    db: AVDC_DB.load(),
+    session: null
+};
+</script>
 
-function loginUser(event) {
-    event.preventDefault();
+<script>
+/* =========================================================
+   BLOCO 6 — UTILITÁRIOS DE INTERFACE
+   Funções pequenas para mensagens, navegação e atualização
+   visual da tela.
+========================================================= */
 
-    const id = document.getElementById("login-user-id").value.trim();
-    const token = document.getElementById("login-user-token").value.trim();
+const AVDC_UI = {
+    switchTab(type) {
+        this.clearMessage("login-msg");
 
-    const found = users.find(u => u.id === id && String(u.token) === token);
+        document.getElementById("tab-admin").classList.toggle("active", type === "admin");
+        document.getElementById("tab-user").classList.toggle("active", type === "user");
 
-    if (!found) {
-        setMessage("login-msg", "Usuário ou token inválido. Gere um token pelo painel Admin.", "error");
-        return;
+        document.getElementById("form-admin").classList.toggle("hidden", type !== "admin");
+        document.getElementById("form-user").classList.toggle("hidden", type !== "user");
+    },
+
+    showPage(page, button) {
+        const pages = ["buscar", "repositorio", "indice", "ia", "plugins", "sobre", "admin"];
+
+        pages.forEach(p => {
+            document.getElementById("page-" + p).classList.add("hidden");
+        });
+
+        document.getElementById("page-" + page).classList.remove("hidden");
+
+        document.querySelectorAll(".menu button").forEach(btn => btn.classList.remove("active"));
+
+        if (button) {
+            button.classList.add("active");
+        }
+
+        AVDC_CONFIG.loadCurrentUserConfig();
+        AVDC_UI.refreshStatus();
+        AVDC_ADMIN.renderUsers();
+    },
+
+    message(id, text, type = "ok") {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.textContent = text;
+        el.className = "msg " + type;
+    },
+
+    clearMessage(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.textContent = "";
+        el.className = "msg";
+    },
+
+    refreshStatus() {
+        const user = AVDC_USERS.currentUser();
+
+        const dataDir = user ? user.dataDir || "-" : "Admin / não definido";
+        const indexDir = user ? user.indexDir || "-" : "Admin / não definido";
+
+        document.getElementById("status-data-dir").textContent = dataDir;
+        document.getElementById("status-index-dir").textContent = indexDir;
+
+        const lastUpdate = user && user.indexLastUpdate
+            ? user.indexLastUpdate
+            : "Nunca atualizado nesta sessão";
+
+        document.getElementById("index-last-update").textContent = lastUpdate;
+    },
+
+    openApp() {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("app-screen").classList.remove("hidden");
+
+        const session = AVDC_STATE.session;
+
+        document.getElementById("logged-as").textContent =
+            session.role === "admin"
+                ? "admin (Administrador)"
+                : session.code + " (Usuário comum)";
+
+        document.getElementById("admin-menu-btn").style.display =
+            session.role === "admin" ? "block" : "none";
+
+        this.showPage("buscar", document.querySelector(".menu button"));
     }
+};
+</script>
 
-    openApp(id, "user");
-}
+<script>
+/* =========================================================
+   BLOCO 7 — USUÁRIOS
+   Funções para localizar usuário atual e buscar usuário
+   por código/token.
+========================================================= */
 
-function openApp(name, role) {
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("app-screen").classList.remove("hidden");
+const AVDC_USERS = {
+    findByCode(code) {
+        return AVDC_STATE.db.users.find(user => user.code === code);
+    },
 
-    document.getElementById("logged-as").textContent =
-        role === "admin" ? name + " (Admin)" : name + " (Usuário)";
+    findByCodeAndToken(code, token) {
+        return AVDC_STATE.db.users.find(user =>
+            user.code === code && String(user.userToken) === String(token)
+        );
+    },
 
-    document.getElementById("admin-menu-btn").style.display =
-        role === "admin" ? "block" : "none";
+    currentUser() {
+        const session = AVDC_STATE.session;
 
-    showPage("buscar", document.querySelector(".menu button"));
-    renderUsers();
-}
+        if (!session || session.role !== "user") {
+            return null;
+        }
 
-function logout() {
-    document.getElementById("app-screen").classList.add("hidden");
-    document.getElementById("login-screen").classList.remove("hidden");
-    clearMessage("login-msg");
-}
-
-function showPage(page, btn) {
-    const pages = ["buscar", "repositorio", "indice", "plugins", "admin"];
-
-    pages.forEach(p => {
-        document.getElementById("page-" + p).classList.add("hidden");
-    });
-
-    document.getElementById("page-" + page).classList.remove("hidden");
-
-    document.querySelectorAll(".menu button").forEach(b => b.classList.remove("active"));
-
-    if (btn) btn.classList.add("active");
-}
-
-function createUser(event) {
-    event.preventDefault();
-
-    const input = document.getElementById("new-user-id");
-    const id = input.value.trim();
-
-    if (!id) return;
-
-    const exists = users.some(u => u.id === id);
-
-    if (exists) {
-        setMessage("create-msg", "Esse usuário já existe.", "error");
-        return;
+        return this.findByCode(session.code);
     }
+};
+</script>
 
-    const token = Math.floor(100000 + Math.random() * 900000);
+<script>
+/* =========================================================
+   BLOCO 8 — AUTENTICAÇÃO
+   Admin:
+   - usuário e senha salvos no banco local.
 
-    users.push({
-        id,
-        token,
-        createdAt: new Date().toLocaleString("pt-BR")
-    });
+   Usuário comum:
+   - entra apenas se código + token baterem com o banco local.
+========================================================= */
 
-    saveUsers();
-    renderUsers();
+const AVDC_AUTH = {
+    loginAdmin(event) {
+        event.preventDefault();
 
-    input.value = "";
-    setMessage("create-msg", "Usuário criado com sucesso. Token: " + token, "ok");
-}
+        const user = document.getElementById("admin-user").value.trim();
+        const pass = document.getElementById("admin-pass").value.trim();
 
-function renderUsers() {
-    const box = document.getElementById("users-list");
+        const admin = AVDC_STATE.db.admin;
 
-    if (!box) return;
+        if (user !== admin.user || pass !== admin.password) {
+            AVDC_UI.message("login-msg", "Administrador ou senha inválidos.", "error");
+            return;
+        }
 
-    if (users.length === 0) {
-        box.innerHTML = "<p>Nenhum usuário comum cadastrado.</p>";
-        return;
+        AVDC_STATE.session = {
+            role: "admin",
+            code: "admin"
+        };
+
+        AVDC_UI.openApp();
+    },
+
+    loginUser(event) {
+        event.preventDefault();
+
+        const code = document.getElementById("login-user-code").value.trim();
+        const token = document.getElementById("login-user-token").value.trim();
+
+        const user = AVDC_USERS.findByCodeAndToken(code, token);
+
+        if (!user) {
+            AVDC_UI.message("login-msg", "Código ou token inválido.", "error");
+            return;
+        }
+
+        AVDC_STATE.session = {
+            role: "user",
+            code: user.code
+        };
+
+        AVDC_UI.openApp();
+    },
+
+    logout() {
+        AVDC_STATE.session = null;
+
+        document.getElementById("app-screen").classList.add("hidden");
+        document.getElementById("login-screen").classList.remove("hidden");
+
+        AVDC_UI.clearMessage("login-msg");
     }
+};
+</script>
 
-    box.innerHTML = "";
+<script>
+/* =========================================================
+   BLOCO 9 — CONFIGURAÇÕES POR USUÁRIO
+   Salva e carrega:
+   - diretório de dados;
+   - diretório de índice;
+   - nome da interface IA;
+   - token da IA.
 
-    users.forEach((u, index) => {
-        box.innerHTML += `
-            <div class="user-item">
-                <span>${u.id}</span>
-                <span>
-                    <span class="badge">${u.token}</span>
-                    <button class="btn-danger" onclick="deleteUser(${index})">Excluir</button>
-                </span>
-            </div>
-        `;
-    });
-}
+   Regra:
+   cada configuração pertence ao código do usuário logado.
+========================================================= */
 
-function deleteUser(index) {
-    users.splice(index, 1);
-    saveUsers();
-    renderUsers();
-}
+const AVDC_CONFIG = {
+    loadCurrentUserConfig() {
+        const user = AVDC_USERS.currentUser();
 
-function searchMock() {
-    const term = document.getElementById("search-input").value.trim();
-    const results = document.getElementById("results");
+        document.getElementById("cfg-data-dir").value = user ? user.dataDir || "" : "";
+        document.getElementById("cfg-index-dir").value = user ? user.indexDir || "" : "";
+        document.getElementById("cfg-ai-name").value = user ? user.aiName || "" : "";
+        document.getElementById("cfg-ai-token").value = user ? user.aiToken || "" : "";
+    },
 
-    if (!term) {
-        results.innerHTML = "<p>Digite algo para pesquisar.</p>";
-        return;
+    saveCurrentUserConfig(messageId) {
+        const user = AVDC_USERS.currentUser();
+
+        if (!user) {
+            AVDC_UI.message(
+                messageId,
+                "O administrador não possui configuração própria nesta tela. Configure usuários no menu Admin.",
+                "warning"
+            );
+            return;
+        }
+
+        user.dataDir = document.getElementById("cfg-data-dir").value.trim();
+        user.indexDir = document.getElementById("cfg-index-dir").value.trim();
+        user.aiName = document.getElementById("cfg-ai-name").value.trim();
+        user.aiToken = document.getElementById("cfg-ai-token").value.trim();
+
+        AVDC_DB.save(AVDC_STATE.db);
+
+        AVDC_UI.refreshStatus();
+        AVDC_UI.message(messageId, "Configuração salva para o usuário " + user.code + ".", "ok");
     }
+};
+</script>
 
-    results.innerHTML = `
-        <div class="result-item">
-            <span>Resultado simulado para: <strong>${term}</strong></span>
-            <button onclick="alert('Abriria o arquivo pelo caminho, sem alterar o original.')">Abrir</button>
-        </div>
-        <div class="result-item">
-            <span>/home/clay/Conhecimento/${term}.md</span>
-            <button onclick="alert('Copiaria ou abriria o caminho no navegador/sistema.')">Abrir caminho</button>
-        </div>
-    `;
-}
+<script>
+/* =========================================================
+   BLOCO 10 — ADMINISTRAÇÃO
+   Recursos:
+   - trocar senha do admin;
+   - criar usuário;
+   - listar usuários;
+   - excluir usuário;
+   - resetar banco local do protótipo.
+========================================================= */
 
-function rebuildIndex() {
-    const now = new Date().toLocaleString("pt-BR");
-    document.getElementById("index-date").textContent = now;
-    setMessage("index-msg", "Índice atualizado manualmente pelo usuário.", "ok");
-}
+const AVDC_ADMIN = {
+    changeAdminPassword() {
+        const newPass = document.getElementById("new-admin-pass").value.trim();
+
+        if (newPass.length < 4) {
+            AVDC_UI.message("admin-pass-msg", "A senha deve ter pelo menos 4 caracteres.", "error");
+            return;
+        }
+
+        AVDC_STATE.db.admin.password = newPass;
+        AVDC_DB.save(AVDC_STATE.db);
+
+        document.getElementById("new-admin-pass").value = "";
+
+        AVDC_UI.message("admin-pass-msg", "Senha do administrador alterada com sucesso.", "ok");
+    },
+
+    createUser() {
+        const code = document.getElementById("new-user-code").value.trim();
+        const dataDir = document.getElementById("new-user-data-dir").value.trim();
+        const indexDir = document.getElementById("new-user-index-dir").value.trim();
+        const aiName = document.getElementById("new-user-ai-name").value.trim();
+        const aiToken = document.getElementById("new-user-ai-token").value.trim();
+
+        if (!code) {
+            AVDC_UI.message("create-user-msg", "Informe o código do usuário.", "error");
+            return;
+        }
+
+        if (AVDC_USERS.findByCode(code)) {
+            AVDC_UI.message("create-user-msg", "Esse código de usuário já existe.", "error");
+            return;
+        }
+
+        const token = this.generateToken();
+
+        AVDC_STATE.db.users.push({
+            code: code,
+            userToken: token,
+            dataDir: dataDir,
+            indexDir: indexDir,
+            aiName: aiName,
+            aiToken: aiToken,
+            createdAt: new Date().toLocaleString("pt-BR"),
+            indexLastUpdate: ""
+        });
+
+        AVDC_DB.save(AVDC_STATE.db);
+
+        this.clearCreateForm();
+        this.renderUsers();
+
+        AVDC_UI.message("create-user-msg", "Usuário criado. Token de acesso: " + token, "ok");
+    },
+
+    generateToken() {
+        return Math.floor(100000 + Math.random() * 900000);
+    },
+
+    clearCreateForm() {
+        document.getElementById("new-user-code").value = "";
+        document.getElementById("new-user-data-dir").value = "";
+        document.getElementById("new-user-index-dir").value = "";
+        document.getElementById("new-user-ai-name").value = "";
+        document.getElementById("new-user-ai-token").value = "";
+    },
+
+    renderUsers() {
+        const container = document.getElementById("users-list-container");
+
+        if (!container) return;
+
+        const users = AVDC_STATE.db.users;
+
+        if (users.length === 0) {
+            container.innerHTML = "<p>Nenhum usuário cadastrado.</p>";
+            return;
+        }
+
+        container.innerHTML = "";
+
+        users.forEach((user, index) => {
+            container.innerHTML += `
+                <div class="user-item">
+                    <div class="user-item-header">
+                        <strong>${this.escapeHTML(user.code)}</strong>
+                        <span class="badge">${this.escapeHTML(String(user.userToken))}</span>
+                    </div>
+
+                    <p><strong>Diretório de dados:</strong> <span class="code">${this.escapeHTML(user.dataDir || "-")}</span></p>
+                    <p><strong>Diretório de índice:</strong> <span class="code">${this.escapeHTML(user.indexDir || "-")}</span></p>
+                    <p><strong>Interface IA:</strong> ${this.escapeHTML(user.aiName || "-")}</p>
+                    <p><strong>Token IA:</strong> ${user.aiToken ? "********" : "-"}</p>
+                    <p><strong>Criado em:</strong> ${this.escapeHTML(user.createdAt || "-")}</p>
+
+                    <button class="btn btn-danger btn-small" onclick="AVDC_ADMIN.deleteUser(${index})">Excluir</button>
+                </div>
+            `;
+        });
+    },
+
+    deleteUser(index) {
+        const user = AVDC_STATE.db.users[index];
+
+        if (!user) return;
+
+        const ok = confirm("Excluir usuário " + user.code + "?");
+
+        if (!ok) return;
+
+        AVDC_STATE.db.users.splice(index, 1);
+        AVDC_DB.save(AVDC_STATE.db);
+
+        this.renderUsers();
+    },
+
+    resetDatabase() {
+        const ok = confirm("Resetar o banco local do protótipo? Isso apagará usuários e senha do admin neste navegador.");
+
+        if (!ok) return;
+
+        AVDC_DB.reset();
+
+        AVDC_UI.message("reset-msg", "Banco local resetado. Saia e entre novamente com admin / admin123.", "ok");
+        this.renderUsers();
+    },
+
+    escapeHTML(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+};
+</script>
+
+<script>
+/* =========================================================
+   BLOCO 11 — ÍNDICE
+   Nesta versão, a atualização do índice é simulada.
+   No futuro:
+   - Backend cria índice SQLite FTS5 ou usa ripgrep.
+   - Índice fica fora do diretório original dos dados.
+   - Reconstrução só acontece quando o usuário pedir.
+========================================================= */
+
+const AVDC_INDEX = {
+    rebuild() {
+        const user = AVDC_USERS.currentUser();
+
+        if (!user) {
+            AVDC_UI.message("index-msg", "Admin não possui índice próprio nesta tela.", "warning");
+            return;
+        }
+
+        user.indexLastUpdate = new Date().toLocaleString("pt-BR");
+
+        AVDC_DB.save(AVDC_STATE.db);
+        AVDC_UI.refreshStatus();
+
+        AVDC_UI.message(
+            "index-msg",
+            "Índice atualizado manualmente para o usuário " + user.code + ".",
+            "ok"
+        );
+    }
+};
+</script>
+
+<script>
+/* =========================================================
+   BLOCO 12 — BUSCA
+   Busca ainda mockada.
+   Ela demonstra o comportamento esperado:
+   - consultar o índice;
+   - retornar resultados;
+   - abrir caminho sem modificar arquivo original.
+========================================================= */
+
+const AVDC_SEARCH = {
+    search() {
+        const term = document.getElementById("search-input").value.trim();
+        const results = document.getElementById("results-container");
+        const user = AVDC_USERS.currentUser();
+
+        if (!term) {
+            results.innerHTML = "<p>Digite algo para pesquisar.</p>";
+            return;
+        }
+
+        const dataDir = user ? user.dataDir || "(diretório de dados não configurado)" : "(admin sem repositório)";
+        const indexDir = user ? user.indexDir || "(diretório de índice não configurado)" : "(admin sem índice)";
+
+        const fakeResults = [
+            {
+                title: "Resultado simulado: " + term,
+                path: dataDir + "/" + term + ".md",
+                snippet: "Trecho simulado encontrado no índice AVDC."
+            },
+            {
+                title: "Anotação relacionada a " + term,
+                path: dataDir + "/notas/" + term + "-resumo.md",
+                snippet: "Outro exemplo de resultado. No futuro virá do SQLite FTS5 ou ripgrep."
+            }
+        ];
+
+        results.innerHTML = "";
+
+        fakeResults.forEach(item => {
+            results.innerHTML += `
+                <div class="result-item">
+                    <div class="result-item-header">
+                        <strong>${AVDC_ADMIN.escapeHTML(item.title)}</strong>
+                        <button class="btn btn-small" onclick="AVDC_SEARCH.openPath('${AVDC_ADMIN.escapeHTML(item.path)}')">Abrir</button>
+                    </div>
+
+                    <p>${AVDC_ADMIN.escapeHTML(item.snippet)}</p>
+                    <p><strong>Caminho:</strong> <span class="code">${AVDC_ADMIN.escapeHTML(item.path)}</span></p>
+                    <p><strong>Índice usado:</strong> <span class="code">${AVDC_ADMIN.escapeHTML(indexDir)}</span></p>
+                </div>
+            `;
+        });
+    },
+
+    openPath(path) {
+        alert(
+            "No backend real, o AVDC abriria este caminho via navegador/sistema, sem alterar o arquivo original:\n\n" +
+            path
+        );
+    }
+};
+</script>
+
+<script>
+/* =========================================================
+   BLOCO 13 — INICIALIZAÇÃO
+   Ponto inicial do protótipo.
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    AVDC_ADMIN.renderUsers();
+});
 </script>
 
 </body>
