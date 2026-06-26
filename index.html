@@ -4,36 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AVDC v1.7 - Protótipo Funcional</title>
+<title>AVDC v1.8 - MVP</title>
 
 <!-- =========================================================
-     AVDC v1.7
-     Protótipo em arquivo único: index.html
+     AVDC v1.8 - MVP em arquivo único
 
-     Objetivo desta versão:
-     - Manter tudo em um único arquivo para facilitar teste.
-     - Simular um banco local usando localStorage.
-     - Validar login de administrador.
-     - Permitir troca da senha do admin.
-     - Cadastrar usuários com token.
-     - Ligar cada usuário a:
-       1. diretório de dados;
-       2. diretório de índice;
-       3. nome da interface IA;
-       4. token da IA.
-     - Manter a filosofia AVDC:
-       dados originais são somente leitura;
-       índice separado;
-       IA opcional;
-       plugins preparados para futuro.
+     Regras desta versão:
+     - Admin cria apenas a identidade do usuário.
+     - Admin NÃO configura repositório, índice ou IA.
+     - Usuário conecta seus próprios dados.
+     - Repositório GitHub é simulado nesta versão.
+     - IA fica desabilitada/em desenvolvimento.
+     - O AVDC nunca altera os dados originais.
+     - O índice fica separado do repositório.
 ========================================================= -->
 
 <style>
-/* =========================================================
-   BLOCO 1 — TEMA VISUAL / CSS
-   Mantém o visual escuro e simples para o painel AVDC.
-========================================================= */
-
 :root {
     --bg-color: #121214;
     --card-bg: #202024;
@@ -148,11 +134,6 @@ input, textarea, select {
     font-size: 15px;
 }
 
-textarea {
-    min-height: 80px;
-    resize: vertical;
-}
-
 input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -193,6 +174,12 @@ button {
 .btn-warning {
     background-color: var(--warning);
     color: #121214;
+}
+
+.btn-disabled {
+    background-color: #555;
+    color: #aaa;
+    cursor: not-allowed;
 }
 
 .btn-small {
@@ -255,17 +242,6 @@ button {
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 12px;
-}
-
-.row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.row > * {
-    flex: 1;
 }
 
 .user-item,
@@ -346,6 +322,12 @@ hr {
     margin: 18px 0;
 }
 
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 @media (max-width: 780px) {
     .grid {
         grid-template-columns: 1fr;
@@ -355,14 +337,6 @@ hr {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    .row {
-        display: block;
-    }
-
-    .row > * {
-        margin-bottom: 10px;
-    }
 }
 </style>
 </head>
@@ -370,17 +344,14 @@ hr {
 <body>
 
 <!-- =========================================================
-     BLOCO 2 — TELA DE LOGIN
-     Possui dois modos:
-     - Administrador: usuário + senha.
-     - Usuário comum: código + token.
+     TELA DE LOGIN
 ========================================================= -->
 
 <div class="container login-container" id="login-screen">
-    <div class="version-badge">v1.7</div>
+    <div class="version-badge">v1.8</div>
 
     <h2>AVDC - Acesso</h2>
-    <p>Protótipo local com cadastro de usuários e configurações individuais.</p>
+    <p>Admin cria identidade. Usuário conecta seus próprios dados.</p>
 
     <div class="tabs">
         <button class="tab-btn active" id="tab-admin" onclick="AVDC_UI.switchTab('admin')">Administrador</button>
@@ -409,7 +380,7 @@ hr {
 
         <div class="form-group">
             <label for="login-user-token">Token do usuário</label>
-            <input type="text" id="login-user-token" placeholder="Ex: 123456" required>
+            <input type="text" id="login-user-token" placeholder="Token gerado pelo admin" required>
         </div>
 
         <button type="submit" class="btn btn-full">Validar e entrar</button>
@@ -420,18 +391,16 @@ hr {
     <hr>
 
     <small>
-        Observação: nesta fase, o banco é local no navegador usando localStorage.
-        Não use tokens reais de produção neste protótipo.
+        Protótipo local usando localStorage. Não use senhas ou tokens reais de produção.
     </small>
 </div>
 
 <!-- =========================================================
-     BLOCO 3 — PAINEL PRINCIPAL
-     Interface principal após login.
+     PAINEL PRINCIPAL
 ========================================================= -->
 
 <div class="container hidden" id="app-screen">
-    <div class="version-badge">v1.7</div>
+    <div class="version-badge">v1.8</div>
 
     <div class="header">
         <div>
@@ -443,8 +412,6 @@ hr {
     </div>
 
     <div class="grid">
-
-        <!-- MENU LATERAL -->
         <nav class="menu">
             <button class="active" onclick="AVDC_UI.showPage('buscar', this)">Pesquisar</button>
             <button onclick="AVDC_UI.showPage('repositorio', this)">Repositório de Dados</button>
@@ -457,24 +424,16 @@ hr {
 
         <main>
 
-            <!-- =================================================
-                 PÁGINA: PESQUISA
-                 Ainda é uma busca simulada.
-                 No backend real, esta busca consultará SQLite FTS5,
-                 ripgrep ou outro mecanismo.
-            ================================================== -->
+            <!-- PESQUISA -->
             <section id="page-buscar">
                 <div class="card">
                     <h3>Busca AVDC</h3>
-                    <p>
-                        O sistema usa o índice existente para responder rápido.
-                        O AVDC não altera os arquivos originais.
-                    </p>
+                    <p>As buscas usam o índice existente. O AVDC não altera os arquivos originais.</p>
 
                     <div class="status-item">
-                        <p><strong>Repositório atual:</strong> <span id="status-data-dir" class="code">-</span></p>
-                        <p><strong>Índice atual:</strong> <span id="status-index-dir" class="code">-</span></p>
-                        <p><strong>Status do índice:</strong> <span id="status-index-state" class="badge badge-ok">Índice existente</span></p>
+                        <p><strong>Repositório:</strong> <span id="status-repo" class="code">-</span></p>
+                        <p><strong>Diretório de índice:</strong> <span id="status-index-dir" class="code">-</span></p>
+                        <p><strong>Status do índice:</strong> <span id="status-index-state" class="badge badge-ok">Índice opcional</span></p>
                     </div>
 
                     <div class="form-group">
@@ -498,41 +457,47 @@ hr {
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: REPOSITÓRIO
-                 Caminho onde ficam os dados do usuário.
-                 Regra AVDC: somente leitura.
-            ================================================== -->
+            <!-- REPOSITÓRIO -->
             <section id="page-repositorio" class="hidden">
                 <div class="card">
-                    <h3>Configuração do Repositório de Dados</h3>
+                    <h3>Repositório de Dados</h3>
                     <p>
-                        Este diretório representa a fonte original dos dados.
-                        O AVDC deve apenas ler esse conteúdo, sem alterar arquivos.
+                        A conexão do repositório é feita somente pelo usuário.
+                        O administrador não informa nem recebe permissão sobre os dados.
                     </p>
 
                     <div class="form-group">
-                        <label for="cfg-data-dir">Diretório de dados</label>
-                        <input type="text" id="cfg-data-dir" placeholder="/home/usuario/Conhecimento">
+                        <label for="github-user">Usuário GitHub</label>
+                        <input type="text" id="github-user" placeholder="Ex: claypper">
                     </div>
 
-                    <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('repo-msg')">Salvar repositório</button>
+                    <div class="form-group">
+                        <label for="github-repo">Repositório GitHub</label>
+                        <input type="text" id="github-repo" placeholder="Ex: minha-biblioteca-avdc">
+                    </div>
+
+                    <button class="btn" onclick="AVDC_REPOSITORY.connectGithub()">
+                        Conectar Repositório GitHub
+                    </button>
 
                     <div id="repo-msg" class="msg"></div>
+
+                    <hr>
+
+                    <div class="status-item">
+                        <p><strong>Status:</strong> <span id="repo-status" class="badge badge-warning">Não conectado</span></p>
+                        <p><strong>Repositório vinculado:</strong> <span id="repo-linked" class="code">-</span></p>
+                    </div>
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: ÍNDICE
-                 Diretório separado onde o AVDC guarda índice,
-                 cache e metadados.
-            ================================================== -->
+            <!-- ÍNDICE -->
             <section id="page-indice" class="hidden">
                 <div class="card">
-                    <h3>Configuração do Diretório de Índice</h3>
+                    <h3>Diretório de Índice</h3>
                     <p>
-                        O índice é separado dos dados originais.
-                        Ele pode ser apagado ou reconstruído sem afetar o repositório.
+                        O índice é separado do repositório original.
+                        Ele pode ser reconstruído quando o usuário quiser.
                     </p>
 
                     <div class="form-group">
@@ -540,105 +505,76 @@ hr {
                         <input type="text" id="cfg-index-dir" placeholder="/home/usuario/.avdc/index">
                     </div>
 
-                    <div class="status-item">
-                        <p><strong>Status:</strong> <span class="badge badge-ok">Índice existente</span></p>
-                        <p><strong>Última atualização:</strong> <span id="index-last-update">Nunca atualizado nesta sessão</span></p>
-                        <p><small>A busca depende do índice para responder rápido.</small></p>
-                    </div>
-
                     <div class="row">
-                        <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('index-msg')">Salvar diretório</button>
+                        <button class="btn" onclick="AVDC_INDEX.saveIndexDir()">Salvar diretório de índice</button>
                         <button class="btn btn-warning" onclick="AVDC_INDEX.rebuild()">Atualizar índice</button>
                     </div>
 
                     <div id="index-msg" class="msg"></div>
+
+                    <hr>
+
+                    <div class="status-item">
+                        <p><strong>Diretório atual:</strong> <span id="index-linked" class="code">-</span></p>
+                        <p><strong>Última atualização:</strong> <span id="index-last-update">Nunca atualizado</span></p>
+                    </div>
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: IA
-                 IA é opcional e ligada ao usuário.
-                 A versão atual apenas salva nome e token.
-            ================================================== -->
+            <!-- IA DESABILITADA -->
             <section id="page-ia" class="hidden">
                 <div class="card">
-                    <h3>Configuração da Interface IA</h3>
-                    <p>
-                        A IA é opcional. O Core do AVDC deve funcionar sem IA.
-                        Esta configuração fica ligada ao código do usuário.
-                    </p>
+                    <h3>Interface IA</h3>
 
-                    <div class="form-group">
-                        <label for="cfg-ai-name">Nome da interface IA</label>
-                        <input type="text" id="cfg-ai-name" placeholder="Ex: OpenAI, Ollama, LM Studio">
+                    <div class="card-dark">
+                        <p><span class="badge badge-warning">Em desenvolvimento</span></p>
+                        <p>A IA é um plugin opcional.</p>
+                        <p>O AVDC funciona normalmente sem IA.</p>
+                        <p>Nenhum token de IA será solicitado nesta versão.</p>
                     </div>
 
-                    <div class="form-group">
-                        <label for="cfg-ai-token">Token da IA</label>
-                        <input type="password" id="cfg-ai-token" placeholder="Token ou chave da IA">
-                    </div>
-
-                    <button class="btn" onclick="AVDC_CONFIG.saveCurrentUserConfig('ia-msg')">Salvar IA</button>
-
-                    <div id="ia-msg" class="msg"></div>
+                    <button class="btn btn-disabled" disabled>Configuração indisponível</button>
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: PLUGINS
-                 Placeholder para arquitetura futura.
-            ================================================== -->
+            <!-- PLUGINS -->
             <section id="page-plugins" class="hidden">
                 <div class="card">
                     <h3>Plugins</h3>
-                    <p>
-                        Em desenvolvimento.
-                    </p>
 
                     <div class="card-dark">
-                        <p><strong>Plugin Pasta Local:</strong> futuro adaptador somente leitura.</p>
-                        <p><strong>Plugin Git:</strong> futuro adaptador para repositórios Git.</p>
-                        <p><strong>Plugin IA:</strong> futuro recurso opcional, nunca obrigatório.</p>
+                        <p><span class="badge badge-warning">Em desenvolvimento</span></p>
+                        <p>Futuro Plugin GitHub: conexão real via OAuth.</p>
+                        <p>Futuro Plugin IA: busca semântica opcional.</p>
+                        <p>Futuro Plugin Pasta Local: leitura somente leitura.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: SOBRE
-                 Registra os princípios do AVDC dentro do próprio arquivo.
-            ================================================== -->
+            <!-- SOBRE -->
             <section id="page-sobre" class="hidden">
                 <div class="card">
                     <h3>Sobre o AVDC</h3>
 
-                    <p><strong>Princípios:</strong></p>
                     <div class="card-dark">
                         <p>1. Os dados pertencem ao usuário.</p>
-                        <p>2. O AVDC nunca altera os dados originais.</p>
-                        <p>3. O AVDC possui apenas permissão de leitura sobre a fonte de dados.</p>
-                        <p>4. Índices, cache e metadados ficam em diretório separado.</p>
-                        <p>5. A IA é opcional e nunca requisito para o funcionamento.</p>
-                        <p>6. Novas funcionalidades devem nascer como plugins.</p>
-                        <p>7. O Core deve permanecer pequeno, estável e previsível.</p>
+                        <p>2. O administrador cria apenas a identidade.</p>
+                        <p>3. O usuário conecta seus próprios dados.</p>
+                        <p>4. O AVDC nunca altera os dados originais.</p>
+                        <p>5. O índice fica separado do repositório.</p>
+                        <p>6. A IA é opcional e desabilitada neste MVP.</p>
+                        <p>7. Plugins serão adicionados sem quebrar o Core.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- =================================================
-                 PÁGINA: ADMIN
-                 Apenas administrador acessa.
-                 Permite:
-                 - trocar senha do admin;
-                 - criar usuários;
-                 - visualizar banco local;
-                 - excluir usuários.
-            ================================================== -->
+            <!-- ADMIN -->
             <section id="page-admin" class="hidden">
                 <div class="card">
                     <h3>Administração</h3>
                     <p>
-                        Área restrita ao administrador. Aqui são criados usuários
-                        e configurados os dados iniciais de cada um.
+                        O administrador cria apenas usuário e token.
+                        Repositório, índice e IA são responsabilidade do próprio usuário.
                     </p>
                 </div>
 
@@ -663,27 +599,9 @@ hr {
                         <input type="text" id="new-user-code" placeholder="Ex: clay">
                     </div>
 
-                    <div class="form-group">
-                        <label for="new-user-data-dir">Diretório de dados</label>
-                        <input type="text" id="new-user-data-dir" placeholder="/home/clay/Conhecimento">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-user-index-dir">Diretório de índice</label>
-                        <input type="text" id="new-user-index-dir" placeholder="/home/clay/.avdc/index">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-user-ai-name">Nome da interface IA</label>
-                        <input type="text" id="new-user-ai-name" placeholder="Ex: OpenAI, Ollama, LM Studio">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-user-ai-token">Token da IA</label>
-                        <input type="password" id="new-user-ai-token" placeholder="Token opcional">
-                    </div>
-
-                    <button class="btn btn-success" onclick="AVDC_ADMIN.createUser()">Criar usuário e gerar token</button>
+                    <button class="btn btn-success" onclick="AVDC_ADMIN.createUser()">
+                        Criar usuário e gerar token
+                    </button>
 
                     <div id="create-user-msg" class="msg"></div>
                 </div>
@@ -697,10 +615,7 @@ hr {
 
                 <div class="card">
                     <h3>Ferramentas do protótipo</h3>
-                    <p>
-                        Use com cuidado. Isso apaga somente o banco local do navegador,
-                        não mexe em nenhum arquivo do computador.
-                    </p>
+                    <p>Apaga apenas o banco local do navegador. Não mexe em nenhum arquivo.</p>
                     <button class="btn btn-danger" onclick="AVDC_ADMIN.resetDatabase()">Resetar banco local</button>
                     <div id="reset-msg" class="msg"></div>
                 </div>
@@ -712,48 +627,22 @@ hr {
 
 <script>
 /* =========================================================
-   BLOCO 4 — CONFIGURAÇÃO GLOBAL DO AVDC
-   Centraliza informações importantes da versão atual.
+   CONFIGURAÇÃO GLOBAL
 ========================================================= */
 
 const AVDC = {
-    version: "1.7",
-    dbKey: "avdc_db_v17",
-    repositoryMode: "read-only",
+    version: "1.8",
+    dbKey: "avdc_db_v18",
+    repositoryMode: "user-owned",
     indexMode: "separate-directory",
-    aiRequired: false,
-    pluginStatus: "em desenvolvimento"
+    aiEnabled: false
 };
 </script>
 
 <script>
 /* =========================================================
-   BLOCO 5 — BANCO LOCAL
-   Nesta versão, o banco é o localStorage do navegador.
-
-   Estrutura:
-   db = {
-     admin: {
-       user: "admin",
-       password: "admin123"
-     },
-     users: [
-       {
-         code,
-         userToken,
-         dataDir,
-         indexDir,
-         aiName,
-         aiToken,
-         createdAt,
-         indexLastUpdate
-       }
-     ]
-   }
-
-   Observação:
-   localStorage não é banco seguro.
-   Serve apenas para prototipar fluxo e interface.
+   BANCO LOCAL
+   localStorage apenas para protótipo.
 ========================================================= */
 
 const AVDC_DB = {
@@ -778,8 +667,7 @@ const AVDC_DB = {
 
         try {
             return JSON.parse(raw);
-        } catch (error) {
-            console.error("Erro ao ler banco local:", error);
+        } catch (e) {
             const db = this.defaultDB();
             this.save(db);
             return db;
@@ -796,7 +684,6 @@ const AVDC_DB = {
     }
 };
 
-/* Estado global da sessão atual */
 window.AVDC_STATE = {
     db: AVDC_DB.load(),
     session: null
@@ -805,9 +692,7 @@ window.AVDC_STATE = {
 
 <script>
 /* =========================================================
-   BLOCO 6 — UTILITÁRIOS DE INTERFACE
-   Funções pequenas para mensagens, navegação e atualização
-   visual da tela.
+   INTERFACE
 ========================================================= */
 
 const AVDC_UI = {
@@ -832,45 +717,12 @@ const AVDC_UI = {
 
         document.querySelectorAll(".menu button").forEach(btn => btn.classList.remove("active"));
 
-        if (button) {
-            button.classList.add("active");
-        }
+        if (button) button.classList.add("active");
 
-        AVDC_CONFIG.loadCurrentUserConfig();
+        AVDC_REPOSITORY.load();
+        AVDC_INDEX.load();
         AVDC_UI.refreshStatus();
         AVDC_ADMIN.renderUsers();
-    },
-
-    message(id, text, type = "ok") {
-        const el = document.getElementById(id);
-        if (!el) return;
-
-        el.textContent = text;
-        el.className = "msg " + type;
-    },
-
-    clearMessage(id) {
-        const el = document.getElementById(id);
-        if (!el) return;
-
-        el.textContent = "";
-        el.className = "msg";
-    },
-
-    refreshStatus() {
-        const user = AVDC_USERS.currentUser();
-
-        const dataDir = user ? user.dataDir || "-" : "Admin / não definido";
-        const indexDir = user ? user.indexDir || "-" : "Admin / não definido";
-
-        document.getElementById("status-data-dir").textContent = dataDir;
-        document.getElementById("status-index-dir").textContent = indexDir;
-
-        const lastUpdate = user && user.indexLastUpdate
-            ? user.indexLastUpdate
-            : "Nunca atualizado nesta sessão";
-
-        document.getElementById("index-last-update").textContent = lastUpdate;
     },
 
     openApp() {
@@ -888,15 +740,39 @@ const AVDC_UI = {
             session.role === "admin" ? "block" : "none";
 
         this.showPage("buscar", document.querySelector(".menu button"));
+    },
+
+    refreshStatus() {
+        const user = AVDC_USERS.currentUser();
+
+        document.getElementById("status-repo").textContent =
+            user && user.githubRepoFullName ? user.githubRepoFullName : "-";
+
+        document.getElementById("status-index-dir").textContent =
+            user && user.indexDir ? user.indexDir : "-";
+    },
+
+    message(id, text, type = "ok") {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.textContent = text;
+        el.className = "msg " + type;
+    },
+
+    clearMessage(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.textContent = "";
+        el.className = "msg";
     }
 };
 </script>
 
 <script>
 /* =========================================================
-   BLOCO 7 — USUÁRIOS
-   Funções para localizar usuário atual e buscar usuário
-   por código/token.
+   USUÁRIOS
 ========================================================= */
 
 const AVDC_USERS = {
@@ -913,9 +789,7 @@ const AVDC_USERS = {
     currentUser() {
         const session = AVDC_STATE.session;
 
-        if (!session || session.role !== "user") {
-            return null;
-        }
+        if (!session || session.role !== "user") return null;
 
         return this.findByCode(session.code);
     }
@@ -924,12 +798,7 @@ const AVDC_USERS = {
 
 <script>
 /* =========================================================
-   BLOCO 8 — AUTENTICAÇÃO
-   Admin:
-   - usuário e senha salvos no banco local.
-
-   Usuário comum:
-   - entra apenas se código + token baterem com o banco local.
+   AUTENTICAÇÃO
 ========================================================= */
 
 const AVDC_AUTH = {
@@ -939,9 +808,7 @@ const AVDC_AUTH = {
         const user = document.getElementById("admin-user").value.trim();
         const pass = document.getElementById("admin-pass").value.trim();
 
-        const admin = AVDC_STATE.db.admin;
-
-        if (user !== admin.user || pass !== admin.password) {
+        if (user !== AVDC_STATE.db.admin.user || pass !== AVDC_STATE.db.admin.password) {
             AVDC_UI.message("login-msg", "Administrador ou senha inválidos.", "error");
             return;
         }
@@ -988,61 +855,9 @@ const AVDC_AUTH = {
 
 <script>
 /* =========================================================
-   BLOCO 9 — CONFIGURAÇÕES POR USUÁRIO
-   Salva e carrega:
-   - diretório de dados;
-   - diretório de índice;
-   - nome da interface IA;
-   - token da IA.
-
-   Regra:
-   cada configuração pertence ao código do usuário logado.
-========================================================= */
-
-const AVDC_CONFIG = {
-    loadCurrentUserConfig() {
-        const user = AVDC_USERS.currentUser();
-
-        document.getElementById("cfg-data-dir").value = user ? user.dataDir || "" : "";
-        document.getElementById("cfg-index-dir").value = user ? user.indexDir || "" : "";
-        document.getElementById("cfg-ai-name").value = user ? user.aiName || "" : "";
-        document.getElementById("cfg-ai-token").value = user ? user.aiToken || "" : "";
-    },
-
-    saveCurrentUserConfig(messageId) {
-        const user = AVDC_USERS.currentUser();
-
-        if (!user) {
-            AVDC_UI.message(
-                messageId,
-                "O administrador não possui configuração própria nesta tela. Configure usuários no menu Admin.",
-                "warning"
-            );
-            return;
-        }
-
-        user.dataDir = document.getElementById("cfg-data-dir").value.trim();
-        user.indexDir = document.getElementById("cfg-index-dir").value.trim();
-        user.aiName = document.getElementById("cfg-ai-name").value.trim();
-        user.aiToken = document.getElementById("cfg-ai-token").value.trim();
-
-        AVDC_DB.save(AVDC_STATE.db);
-
-        AVDC_UI.refreshStatus();
-        AVDC_UI.message(messageId, "Configuração salva para o usuário " + user.code + ".", "ok");
-    }
-};
-</script>
-
-<script>
-/* =========================================================
-   BLOCO 10 — ADMINISTRAÇÃO
-   Recursos:
-   - trocar senha do admin;
-   - criar usuário;
-   - listar usuários;
-   - excluir usuário;
-   - resetar banco local do protótipo.
+   ADMIN
+   Admin só cria identidade.
+   Não configura dados do usuário.
 ========================================================= */
 
 const AVDC_ADMIN = {
@@ -1064,10 +879,6 @@ const AVDC_ADMIN = {
 
     createUser() {
         const code = document.getElementById("new-user-code").value.trim();
-        const dataDir = document.getElementById("new-user-data-dir").value.trim();
-        const indexDir = document.getElementById("new-user-index-dir").value.trim();
-        const aiName = document.getElementById("new-user-ai-name").value.trim();
-        const aiToken = document.getElementById("new-user-ai-token").value.trim();
 
         if (!code) {
             AVDC_UI.message("create-user-msg", "Informe o código do usuário.", "error");
@@ -1082,19 +893,21 @@ const AVDC_ADMIN = {
         const token = this.generateToken();
 
         AVDC_STATE.db.users.push({
-            code: code,
+            code,
             userToken: token,
-            dataDir: dataDir,
-            indexDir: indexDir,
-            aiName: aiName,
-            aiToken: aiToken,
-            createdAt: new Date().toLocaleString("pt-BR"),
-            indexLastUpdate: ""
+            githubUser: "",
+            githubRepo: "",
+            githubRepoFullName: "",
+            githubConnected: false,
+            indexDir: "",
+            indexLastUpdate: "",
+            createdAt: new Date().toLocaleString("pt-BR")
         });
 
         AVDC_DB.save(AVDC_STATE.db);
 
-        this.clearCreateForm();
+        document.getElementById("new-user-code").value = "";
+
         this.renderUsers();
 
         AVDC_UI.message("create-user-msg", "Usuário criado. Token de acesso: " + token, "ok");
@@ -1104,17 +917,8 @@ const AVDC_ADMIN = {
         return Math.floor(100000 + Math.random() * 900000);
     },
 
-    clearCreateForm() {
-        document.getElementById("new-user-code").value = "";
-        document.getElementById("new-user-data-dir").value = "";
-        document.getElementById("new-user-index-dir").value = "";
-        document.getElementById("new-user-ai-name").value = "";
-        document.getElementById("new-user-ai-token").value = "";
-    },
-
     renderUsers() {
         const container = document.getElementById("users-list-container");
-
         if (!container) return;
 
         const users = AVDC_STATE.db.users;
@@ -1134,10 +938,8 @@ const AVDC_ADMIN = {
                         <span class="badge">${this.escapeHTML(String(user.userToken))}</span>
                     </div>
 
-                    <p><strong>Diretório de dados:</strong> <span class="code">${this.escapeHTML(user.dataDir || "-")}</span></p>
-                    <p><strong>Diretório de índice:</strong> <span class="code">${this.escapeHTML(user.indexDir || "-")}</span></p>
-                    <p><strong>Interface IA:</strong> ${this.escapeHTML(user.aiName || "-")}</p>
-                    <p><strong>Token IA:</strong> ${user.aiToken ? "********" : "-"}</p>
+                    <p><strong>Repositório:</strong> <span class="code">${this.escapeHTML(user.githubRepoFullName || "configurado pelo usuário")}</span></p>
+                    <p><strong>Índice:</strong> <span class="code">${this.escapeHTML(user.indexDir || "configurado pelo usuário")}</span></p>
                     <p><strong>Criado em:</strong> ${this.escapeHTML(user.createdAt || "-")}</p>
 
                     <button class="btn btn-danger btn-small" onclick="AVDC_ADMIN.deleteUser(${index})">Excluir</button>
@@ -1148,28 +950,21 @@ const AVDC_ADMIN = {
 
     deleteUser(index) {
         const user = AVDC_STATE.db.users[index];
-
         if (!user) return;
 
-        const ok = confirm("Excluir usuário " + user.code + "?");
-
-        if (!ok) return;
+        if (!confirm("Excluir usuário " + user.code + "?")) return;
 
         AVDC_STATE.db.users.splice(index, 1);
         AVDC_DB.save(AVDC_STATE.db);
-
         this.renderUsers();
     },
 
     resetDatabase() {
-        const ok = confirm("Resetar o banco local do protótipo? Isso apagará usuários e senha do admin neste navegador.");
-
-        if (!ok) return;
+        if (!confirm("Resetar o banco local do protótipo?")) return;
 
         AVDC_DB.reset();
-
-        AVDC_UI.message("reset-msg", "Banco local resetado. Saia e entre novamente com admin / admin123.", "ok");
         this.renderUsers();
+        AVDC_UI.message("reset-msg", "Banco local resetado. Login inicial: admin / admin123.", "ok");
     },
 
     escapeHTML(value) {
@@ -1185,31 +980,74 @@ const AVDC_ADMIN = {
 
 <script>
 /* =========================================================
-   BLOCO 11 — ÍNDICE
-   Nesta versão, a atualização do índice é simulada.
-   No futuro:
-   - Backend cria índice SQLite FTS5 ou usa ripgrep.
-   - Índice fica fora do diretório original dos dados.
-   - Reconstrução só acontece quando o usuário pedir.
+   REPOSITÓRIO GITHUB
+   Nesta versão é simulação.
+   No futuro será OAuth real.
 ========================================================= */
 
-const AVDC_INDEX = {
-    rebuild() {
+const AVDC_REPOSITORY = {
+    load() {
         const user = AVDC_USERS.currentUser();
 
+        const githubUser = document.getElementById("github-user");
+        const githubRepo = document.getElementById("github-repo");
+        const repoStatus = document.getElementById("repo-status");
+        const repoLinked = document.getElementById("repo-linked");
+
+        if (!githubUser || !githubRepo) return;
+
         if (!user) {
-            AVDC_UI.message("index-msg", "Admin não possui índice próprio nesta tela.", "warning");
+            githubUser.value = "";
+            githubRepo.value = "";
+            repoStatus.textContent = "Admin não conecta repositório";
+            repoStatus.className = "badge badge-warning";
+            repoLinked.textContent = "-";
             return;
         }
 
-        user.indexLastUpdate = new Date().toLocaleString("pt-BR");
+        githubUser.value = user.githubUser || "";
+        githubRepo.value = user.githubRepo || "";
+
+        if (user.githubConnected) {
+            repoStatus.textContent = "Conectado";
+            repoStatus.className = "badge badge-ok";
+            repoLinked.textContent = user.githubRepoFullName || "-";
+        } else {
+            repoStatus.textContent = "Não conectado";
+            repoStatus.className = "badge badge-warning";
+            repoLinked.textContent = "-";
+        }
+    },
+
+    connectGithub() {
+        const user = AVDC_USERS.currentUser();
+
+        if (!user) {
+            AVDC_UI.message("repo-msg", "Somente o usuário comum conecta o próprio repositório.", "warning");
+            return;
+        }
+
+        const githubUser = document.getElementById("github-user").value.trim();
+        const githubRepo = document.getElementById("github-repo").value.trim();
+
+        if (!githubUser || !githubRepo) {
+            AVDC_UI.message("repo-msg", "Informe usuário GitHub e nome do repositório.", "error");
+            return;
+        }
+
+        user.githubUser = githubUser;
+        user.githubRepo = githubRepo;
+        user.githubRepoFullName = githubUser + "/" + githubRepo;
+        user.githubConnected = true;
 
         AVDC_DB.save(AVDC_STATE.db);
+
+        this.load();
         AVDC_UI.refreshStatus();
 
         AVDC_UI.message(
-            "index-msg",
-            "Índice atualizado manualmente para o usuário " + user.code + ".",
+            "repo-msg",
+            "Repositório GitHub conectado com sucesso para o usuário " + user.code + ".",
             "ok"
         );
     }
@@ -1218,12 +1056,93 @@ const AVDC_INDEX = {
 
 <script>
 /* =========================================================
-   BLOCO 12 — BUSCA
-   Busca ainda mockada.
-   Ela demonstra o comportamento esperado:
-   - consultar o índice;
-   - retornar resultados;
-   - abrir caminho sem modificar arquivo original.
+   ÍNDICE
+========================================================= */
+
+const AVDC_INDEX = {
+    load() {
+        const user = AVDC_USERS.currentUser();
+
+        const input = document.getElementById("cfg-index-dir");
+        const linked = document.getElementById("index-linked");
+        const lastUpdate = document.getElementById("index-last-update");
+
+        if (!input || !linked || !lastUpdate) return;
+
+        if (!user) {
+            input.value = "";
+            linked.textContent = "-";
+            lastUpdate.textContent = "Admin não possui índice próprio";
+            return;
+        }
+
+        input.value = user.indexDir || "";
+        linked.textContent = user.indexDir || "-";
+        lastUpdate.textContent = user.indexLastUpdate || "Nunca atualizado";
+    },
+
+    saveIndexDir() {
+        const user = AVDC_USERS.currentUser();
+
+        if (!user) {
+            AVDC_UI.message("index-msg", "Somente o usuário comum configura o próprio índice.", "warning");
+            return;
+        }
+
+        const indexDir = document.getElementById("cfg-index-dir").value.trim();
+
+        if (!indexDir) {
+            AVDC_UI.message("index-msg", "Informe o diretório de índice.", "error");
+            return;
+        }
+
+        user.indexDir = indexDir;
+
+        AVDC_DB.save(AVDC_STATE.db);
+
+        this.load();
+        AVDC_UI.refreshStatus();
+
+        AVDC_UI.message("index-msg", "Diretório de índice salvo.", "ok");
+    },
+
+    rebuild() {
+        const user = AVDC_USERS.currentUser();
+
+        if (!user) {
+            AVDC_UI.message("index-msg", "Somente o usuário comum atualiza o próprio índice.", "warning");
+            return;
+        }
+
+        if (!user.githubConnected) {
+            AVDC_UI.message("index-msg", "Conecte um repositório antes de atualizar o índice.", "error");
+            return;
+        }
+
+        if (!user.indexDir) {
+            AVDC_UI.message("index-msg", "Configure o diretório de índice antes de atualizar.", "error");
+            return;
+        }
+
+        user.indexLastUpdate = new Date().toLocaleString("pt-BR");
+
+        AVDC_DB.save(AVDC_STATE.db);
+
+        this.load();
+
+        AVDC_UI.message(
+            "index-msg",
+            "Índice atualizado manualmente. Esta etapa ainda é simulada no MVP.",
+            "ok"
+        );
+    }
+};
+</script>
+
+<script>
+/* =========================================================
+   BUSCA
+   Busca mockada usando repositório e índice do usuário.
 ========================================================= */
 
 const AVDC_SEARCH = {
@@ -1237,19 +1156,31 @@ const AVDC_SEARCH = {
             return;
         }
 
-        const dataDir = user ? user.dataDir || "(diretório de dados não configurado)" : "(admin sem repositório)";
-        const indexDir = user ? user.indexDir || "(diretório de índice não configurado)" : "(admin sem índice)";
+        if (!user) {
+            results.innerHTML = "<p>Admin não possui repositório de busca. Entre como usuário comum.</p>";
+            return;
+        }
+
+        if (!user.githubConnected) {
+            results.innerHTML = "<p>Conecte seu repositório GitHub antes de pesquisar.</p>";
+            return;
+        }
+
+        if (!user.indexDir) {
+            results.innerHTML = "<p>Configure o diretório de índice antes de pesquisar.</p>";
+            return;
+        }
 
         const fakeResults = [
             {
                 title: "Resultado simulado: " + term,
-                path: dataDir + "/" + term + ".md",
+                path: "https://github.com/" + user.githubRepoFullName + "/blob/main/" + term + ".md",
                 snippet: "Trecho simulado encontrado no índice AVDC."
             },
             {
-                title: "Anotação relacionada a " + term,
-                path: dataDir + "/notas/" + term + "-resumo.md",
-                snippet: "Outro exemplo de resultado. No futuro virá do SQLite FTS5 ou ripgrep."
+                title: "Resumo relacionado a " + term,
+                path: "https://github.com/" + user.githubRepoFullName + "/blob/main/resumos/" + term + ".md",
+                snippet: "Resultado demonstrativo. No futuro virá de SQLite FTS5 ou ripgrep."
             }
         ];
 
@@ -1265,7 +1196,7 @@ const AVDC_SEARCH = {
 
                     <p>${AVDC_ADMIN.escapeHTML(item.snippet)}</p>
                     <p><strong>Caminho:</strong> <span class="code">${AVDC_ADMIN.escapeHTML(item.path)}</span></p>
-                    <p><strong>Índice usado:</strong> <span class="code">${AVDC_ADMIN.escapeHTML(indexDir)}</span></p>
+                    <p><strong>Índice usado:</strong> <span class="code">${AVDC_ADMIN.escapeHTML(user.indexDir)}</span></p>
                 </div>
             `;
         });
@@ -1273,7 +1204,7 @@ const AVDC_SEARCH = {
 
     openPath(path) {
         alert(
-            "No backend real, o AVDC abriria este caminho via navegador/sistema, sem alterar o arquivo original:\n\n" +
+            "No backend real, o AVDC abriria este caminho sem alterar o arquivo original:\n\n" +
             path
         );
     }
@@ -1281,11 +1212,6 @@ const AVDC_SEARCH = {
 </script>
 
 <script>
-/* =========================================================
-   BLOCO 13 — INICIALIZAÇÃO
-   Ponto inicial do protótipo.
-========================================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
     AVDC_ADMIN.renderUsers();
 });
