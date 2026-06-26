@@ -1,0 +1,12 @@
+{
+  "name": "avdc-core",
+  "version": "1.0.0",
+  "description": "AVDC - Ambiente Virtual de Dados Conectados",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
