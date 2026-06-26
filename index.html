@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVDC - Painel de Acesso 1.1</title>
+    <title>AVDC - Painel de Acesso 1.2 </title>
     <style>
         :root {
             --bg-color: #121214;
@@ -15,196 +15,49 @@
             --danger: #f75a68;
             --success: #00b37e;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            margin-bottom: 24px;
-            text-align: center;
-            color: #fff;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 24px;
-            border-bottom: 2px solid #29292e;
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-support);
-            padding: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: -2px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--text-support);
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 4px;
-            border: 1px solid #29292e;
-            background-color: #121214;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        button.btn-submit {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button.btn-submit:hover {
-            background-color: var(--primary-hover);
-        }
-
-        /* Painel do Sistema (Escondido por padrão) */
-        #dashboard {
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .dash-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #29292e;
-        }
-
-        .grid-admin {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .grid-admin { grid-template-columns: 1fr; }
-        }
-
-        .card {
-            background-color: #29292e;
-            padding: 24px;
-            border-radius: 6px;
-        }
-
-        .user-list {
-            margin-top: 15px;
-        }
-
-        .user-item {
-            background-color: #121214;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .token-badge {
-            background-color: var(--primary-color);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 14px;
-        }
-
-        .logout-btn {
-            background: none;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .logout-btn:hover {
-            background-color: var(--danger);
-            color: #fff;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background-color: var(--card-bg); padding: 40px; border-radius: 8px; width: 100%; max-width: 450px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        h2 { margin-bottom: 24px; text-align: center; color: #fff; }
+        .tabs { display: flex; margin-bottom: 24px; border-bottom: 2px solid #29292e; }
+        .tab-btn { flex: 1; background: none; border: none; color: var(--text-support); padding: 12px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .tab-btn.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); margin-bottom: -2px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--text-support); }
+        input { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #29292e; background-color: #121214; color: #fff; font-size: 16px; }
+        input:focus { outline: none; border-color: var(--primary-color); }
+        button.btn-submit { width: 100%; padding: 14px; background-color: var(--primary-color); border: none; border-radius: 4px; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button.btn-submit:hover { background-color: var(--primary-hover); }
+        #dashboard { max-width: 900px; width: 100%; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #29292e; }
+        .grid-admin { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media (max-width: 768px) { .grid-admin { grid-template-columns: 1fr; } }
+        .card { background-color: #29292e; padding: 24px; border-radius: 6px; }
+        .user-list { margin-top: 15px; }
+        .user-item { background-color: #121214; padding: 12px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .token-badge { background-color: var(--primary-color); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 14px; }
+        .logout-btn { background: none; border: 1px solid var(--danger); color: var(--danger); padding: 8px 16px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="container" id="login-container">
         <h2>AVDC - Acesso</h2>
-        
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('admin')">Administrador</button>
             <button class="tab-btn" onclick="switchTab('user')">Usuário Comum</button>
         </div>
-
         <form id="form-admin" onsubmit="handleLogin(event, 'admin')">
             <div class="form-group">
                 <label for="admin-user">Usuário Administrador</label>
                 <input type="text" id="admin-user" placeholder="Ex: admin" required>
             </div>
             <div class="form-group">
-                <label for="admin-pass">Senha (Qualquer valor libera o teste)</label>
+                <label for="admin-pass">Senha (Qualquer valor libera)</label>
                 <input type="password" id="admin-pass" placeholder="Digite sua senha fixa">
             </div>
             <button type="submit" class="btn-submit">Entrar como Admin</button>
         </form>
-
         <form id="form-user" onsubmit="handleLogin(event, 'user')" style="display: none;">
             <div class="form-group">
                 <label for="user-id">ID do Usuário</label>
@@ -212,7 +65,7 @@
             </div>
             <div class="form-group">
                 <label for="user-token">Token Diário</label>
-                <input type="text" id="user-token" placeholder="Digite o token do dia" required>
+                <input type="text" id="user-token" placeholder="Digite o token" required>
             </div>
             <button type="submit" class="btn-submit">Validar e Entrar</button>
         </form>
@@ -226,132 +79,81 @@
             </div>
             <button class="logout-btn" onclick="logout()">Sair</button>
         </div>
-
         <div class="grid-admin" id="admin-content">
             <div class="card">
                 <h3>Gerar Novo Usuário</h3>
-                <p style="font-size: 13px; color: var(--text-support); margin-bottom: 15px;">Crie acessos para os colaboradores.</p>
-                
                 <form id="form-create-user" onsubmit="createUser(event)">
                     <div class="form-group">
                         <label>ID do Usuário</label>
                         <input type="text" id="new-user-id" placeholder="Ex: joao.silva" required>
                     </div>
-                    <button type="submit" class="btn-submit" style="background-color: var(--success);">Gerar Token de Acesso</button>
+                    <button type="submit" class="btn-submit" style="background-color: var(--success);">Gerar Token</button>
                 </form>
             </div>
-
             <div class="card">
-                <h3>Usuários Ativos e Tokens Diários</h3>
+                <h3>Usuários Ativos e Tokens</h3>
                 <div class="user-list" id="users-list-container">
-                    <div class="user-item">
-                        <span>admin (Você)</span>
-                        <span class="token-badge" style="background-color: #29292e;">Acesso Direto</span>
-                    </div>
+                    <div class="user-item"><span>admin (Você)</span><span class="token-badge" style="background-color: #29292e;">Acesso Direto</span></div>
                 </div>
             </div>
         </div>
-
         <div id="user-content" style="display: none;">
             <div class="card">
                 <h3>Bem-vindo ao AVDC</h3>
-                <p style="margin-top: 10px; color: var(--text-support);">Você está logado como usuário comum utilizando o token diário válido.</p>
+                <p style="margin-top: 10px; color: var(--text-support);">Logado como usuário comum utilizando token válido.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Banco de dados em memória temporária para o protótipo
         let dbUsers = [];
-
         function switchTab(type) {
-            const adminBtn = document.querySelectorAll('.tab-btn')[0];
-            const userBtn = document.querySelectorAll('.tab-btn')[1];
-            const adminForm = document.getElementById('form-admin');
-            const userForm = document.getElementById('form-user');
-
+            const tabs = document.querySelectorAll('.tab-btn');
             if (type === 'admin') {
-                adminBtn.classList.add('active');
-                userBtn.classList.remove('active');
-                adminForm.style.display = 'block';
-                userForm.style.display = 'none';
+                tabs[0].classList.add('active'); tabs[1].classList.remove('active');
+                document.getElementById('form-admin').style.display = 'block';
+                document.getElementById('form-user').style.display = 'none';
             } else {
-                userBtn.classList.add('active');
-                adminBtn.classList.remove('active');
-                adminForm.style.display = 'none';
-                userForm.style.display = 'block';
+                tabs[1].classList.add('active'); tabs[0].classList.remove('active');
+                document.getElementById('form-admin').style.display = 'none';
+                document.getElementById('form-user').style.display = 'block';
             }
         }
-
         function handleLogin(event, role) {
             event.preventDefault();
-            
-            const loginContainer = document.getElementById('login-container');
-            const dashboard = document.getElementById('dashboard');
-            const loggedAsLabel = document.getElementById('logged-as');
-            const adminContent = document.getElementById('admin-content');
-            const userContent = document.getElementById('user-content');
-
-            loginContainer.style.display = 'none';
-            dashboard.style.display = 'block';
-
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            const label = document.getElementById('logged-as');
             if (role === 'admin') {
-                const userVal = document.getElementById('admin-user').value;
-                loggedAsLabel.textContent = `${userVal} (Administrador)`;
-                adminContent.style.display = 'grid';
-                userContent.style.display = 'none';
+                label.textContent = document.getElementById('admin-user').value + " (Admin)";
+                document.getElementById('admin-content').style.display = 'grid';
+                document.getElementById('user-content').style.display = 'none';
             } else {
-                const userVal = document.getElementById('user-id').value;
-                loggedAsLabel.textContent = `${userVal} (Usuário)`;
-                adminContent.style.display = 'none';
-                userContent.style.display = 'block';
+                label.textContent = document.getElementById('user-id').value + " (Usuário)";
+                document.getElementById('admin-content').style.display = 'none';
+                document.getElementById('user-content').style.display = 'block';
             }
         }
-
         function createUser(event) {
             event.preventDefault();
-            const inputId = document.getElementById('new-user-id');
-            const userId = inputId.value.trim();
-
-            if(!userId) return;
-
-            // Gera um token randômico simulando o token do dia
-            const mockToken = Math.floor(100000 + Math.random() * 900000);
-
-            dbUsers.push({ id: userId, token: mockToken });
-            inputId.value = '';
-            
+            const input = document.getElementById('new-user-id');
+            const val = input.value.trim();
+            if(!val) return;
+            const token = Math.floor(100000 + Math.random() * 900000);
+            dbUsers.push({ id: val, token: token });
+            input.value = '';
             renderUsers();
         }
-
         function renderUsers() {
             const container = document.getElementById('users-list-container');
-            // Mantém o admin estático e renderiza os novos
-            container.innerHTML = `
-                <div class="user-item">
-                    <span>admin (Você)</span>
-                    <span class="token-badge" style="background-color: #29292e;">Acesso Direto</span>
-                </div>
-            `;
-
+            container.innerHTML = `<div class="user-item"><span>admin (Você)</span><span class="token-badge" style="background-color: #29292e;">Acesso Direto</span></div>`;
             dbUsers.forEach(u => {
-                container.innerHTML += `
-                    <div class="user-item">
-                        <span>${u.id}</span>
-                        <span class="token-badge">${u.token}</span>
-                    </div>
-                `;
+                container.innerHTML += `<div class="user-item"><span>${u.id}</span><span class="token-badge">${u.token}</span></div>`;
             });
         }
-
         function logout() {
             document.getElementById('login-container').style.display = 'block';
             document.getElementById('dashboard').style.display = 'none';
-            // Limpa os campos de login
-            document.getElementById('admin-user').value = '';
-            document.getElementById('admin-pass').value = '';
-            document.getElementById('user-id').value = '';
-            document.getElementById('user-token').value = '';
         }
     </script>
 </body>
