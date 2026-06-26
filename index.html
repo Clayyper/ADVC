@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVDC - Painel de Acesso 1.2 </title>
+    <title>AVDC v1.3 - Painel de Acesso</title>
     <style>
         :root {
             --bg-color: #121214;
@@ -17,7 +17,8 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background-color: var(--card-bg); padding: 40px; border-radius: 8px; width: 100%; max-width: 450px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .container { background-color: var(--card-bg); padding: 40px; border-radius: 8px; width: 100%; max-width: 450px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; }
+        .version-badge { position: absolute; top: 15px; right: 15px; background: #29292e; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: var(--text-support); font-family: monospace; }
         h2 { margin-bottom: 24px; text-align: center; color: #fff; }
         .tabs { display: flex; margin-bottom: 24px; border-bottom: 2px solid #29292e; }
         .tab-btn { flex: 1; background: none; border: none; color: var(--text-support); padding: 12px; cursor: pointer; font-weight: bold; font-size: 14px; }
@@ -42,6 +43,7 @@
 <body>
 
     <div class="container" id="login-container">
+        <div class="version-badge">v1.3</div>
         <h2>AVDC - Acesso</h2>
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('admin')">Administrador</button>
@@ -72,6 +74,7 @@
     </div>
 
     <div class="container" id="dashboard" style="display: none;">
+        <div class="version-badge">v1.3</div>
         <div class="dash-header">
             <div>
                 <h2 style="text-align: left; margin: 0;">Painel AVDC</h2>
