@@ -3,388 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVDC - Ambiente Virtual de Dados Conectados</title>
+    <title>AVDC - Painel de Acesso</title>
     <style>
-        /* Variáveis de Tema - Ajuste com as cores do seu projeto antigo */
         :root {
-            --bg-primary: #121214;
-            --bg-secondary: #202024;
-            --bg-tertiary: #29292e;
-            --text-main: #e1e1e6;
-            --text-muted: #8d8d99;
-            --accent-color: #00b37e; /* Verde estilo dev, mude se preferir */
-            --border-color: #323238;
+            --bg-color: #121214;
+            --card-bg: #202024;
+            --text-color: #e1e1e6;
+            --text-support: #a8a8b3;
+            --primary-color: #8257e5;
+            --primary-hover: #9466ff;
+            --danger: #f75a68;
+            --success: #00b37e;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        .hidden { display: none !important; }
-
-        /* --- TELA DE LOGIN / CADASTRO --- */
-        .auth-container {
-            background-color: var(--bg-secondary);
-            padding: 2.5rem;
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
             border-radius: 8px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            border: 1px solid var(--border-color);
+            max-width: 450px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
 
-        .auth-header {
+        h2 {
+            margin-bottom: 24px;
             text-align: center;
-            margin-bottom: 2rem;
+            color: #fff;
         }
 
-        .auth-header h1 {
-            color: var(--accent-color);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .tabs {
+            display: flex;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #29292e;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-support);
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: -2px;
         }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
 
-        .form-group label {
+        label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-support);
         }
 
-        .form-group input {
+        input {
             width: 100%;
-            padding: 0.75rem;
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
+            padding: 12px;
             border-radius: 4px;
-            color: var(--text-main);
-            font-size: 1rem;
-        }
-
-        .form-group input:focus {
-            outline: 1px solid var(--accent-color);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--accent-color);
+            border: 1px solid #29292e;
+            background-color: #121214;
             color: #fff;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button.btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
             border: none;
             border-radius: 4px;
-            font-size: 1rem;
+            color: #fff;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .btn:hover { background-color: #00875f; }
-
-        .auth-toggle {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        button.btn-submit:hover {
+            background-color: var(--primary-hover);
         }
 
-        .auth-toggle span {
-            color: var(--accent-color);
-            cursor: pointer;
-            text-decoration: underline;
+        /* Painel do Sistema (Escondido por padrão) */
+        #dashboard {
+            max-width: 900px;
+            width: 100%;
         }
 
-        /* --- DASHBOARD PRINCIPAL --- */
-        .app-container {
+        .dash-header {
             display: flex;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-secondary);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            padding: 1.5rem;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #29292e;
         }
 
-        .logo h2 {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
+        .grid-admin {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
         }
 
-        .nav-group h3 {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
+        @media (max-width: 768px) {
+            .grid-admin { grid-template-columns: 1fr; }
         }
 
-        .nav-item {
-            display: block;
-            padding: 0.75rem 1rem;
-            color: var(--text-main);
-            text-decoration: none;
+        .card {
+            background-color: #29292e;
+            padding: 24px;
+            border-radius: 6px;
+        }
+
+        .user-list {
+            margin-top: 15px;
+        }
+
+        .user-item {
+            background-color: #121214;
+            padding: 12px;
+            margin-bottom: 10px;
             border-radius: 4px;
-            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .token-badge {
+            background-color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
         }
-
-        .nav-item:hover, .nav-item.active {
-            background-color: var(--bg-tertiary);
-            color: var(--accent-color);
+        
+        .logout-btn:hover {
+            background-color: var(--danger);
+            color: #fff;
         }
-
-        .plugin-tag {
-            font-size: 0.7rem;
-            background-color: var(--bg-primary);
-            color: var(--text-muted);
-            padding: 2px 6px;
-            border-radius: 4px;
-            float: right;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-            background-color: var(--bg-primary);
-        }
-
-        /* Seções da Interface */
-        .view-section h2 {
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-        }
-
-        /* Campo de Busca e Resultados */
-        .search-box {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .search-box input {
-            flex: 1;
-            padding: 0.75rem;
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-main);
-            font-size: 1rem;
-        }
-
-        .results-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .result-item {
-            background-color: var(--bg-secondary);
-            padding: 1rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-
-        .result-item h4 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .result-item a {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-decoration: none;
-        }
-
-        .result-item a:hover { text-decoration: underline; }
-
-        /* Configurações */
-        .config-card {
-            background-color: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .config-card h4 { margin-bottom: 1rem; color: var(--text-main); }
     </style>
 </head>
 <body>
 
-    <div id="authView" class="auth-container">
-        <div id="loginBlock">
-            <div class="auth-header">
-                <h1>AVDC</h1>
-                <p>Entre com seu ID e Token Diário</p>
-            </div>
-            <div class="form-group">
-                <label>ID do Usuário</label>
-                <input type="text" id="loginId" placeholder="Ex: clayson.oliveira">
-            </div>
-            <div class="form-group">
-                <label>Token de Acesso Diário</label>
-                <input type="password" id="loginToken" placeholder="••••••••">
-            </div>
-            <button class="btn" onclick="login()">Entrar no Sistema</button>
-            <div class="auth-toggle">Novo por aqui? <span onclick="toggleAuth(true)">Criar Acesso</span></div>
+    <div class="container" id="login-container">
+        <h2>AVDC - Acesso</h2>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('admin')">Administrador</button>
+            <button class="tab-btn" onclick="switchTab('user')">Usuário Comum</button>
         </div>
 
-        <div id="registerBlock" class="hidden">
-            <div class="auth-header">
-                <h1>Novo Acesso</h1>
-                <p>Gere seu identificador único</p>
+        <form id="form-admin" onsubmit="handleLogin(event, 'admin')">
+            <div class="form-group">
+                <label for="admin-user">Usuário Administrador</label>
+                <input type="text" id="admin-user" placeholder="Ex: admin" required>
             </div>
             <div class="form-group">
-                <label>Escolha seu ID de Usuário</label>
-                <input type="text" id="regId" placeholder="Ex: clayson.oliveira">
+                <label for="admin-pass">Senha (Qualquer valor libera o teste)</label>
+                <input type="password" id="admin-pass" placeholder="Digite sua senha fixa">
             </div>
-            <button class="btn" onclick="register()">Gerar Token e Salvar</button>
-            <div class="auth-toggle">Já possui acesso? <span onclick="toggleAuth(false)">Fazer Login</span></div>
-        </div>
+            <button type="submit" class="btn-submit">Entrar como Admin</button>
+        </form>
+
+        <form id="form-user" onsubmit="handleLogin(event, 'user')" style="display: none;">
+            <div class="form-group">
+                <label for="user-id">ID do Usuário</label>
+                <input type="text" id="user-id" placeholder="Ex: user123" required>
+            </div>
+            <div class="form-group">
+                <label for="user-token">Token Diário</label>
+                <input type="text" id="user-token" placeholder="Digite o token do dia" required>
+            </div>
+            <button type="submit" class="btn-submit">Validar e Entrar</button>
+        </form>
     </div>
 
-    <div id="appView" class="app-container hidden">
-        <div class="sidebar">
+    <div class="container" id="dashboard" style="display: none;">
+        <div class="dash-header">
             <div>
-                <div class="logo">
-                    <h2>AVDC Core</h2>
-                </div>
-                <div class="nav-group">
-                    <h3>Geral</h3>
-                    <div class="nav-item active" id="menuSearchBtn" onclick="switchView('search')">Pesquisa Avançada</div>
-                    <div class="nav-item" id="menuConfigBtn" onclick="switchView('config')">Configurações</div>
-                </div>
-                <div class="nav-group" style="margin-top: 2rem;">
-                    <h3>Plugins</h3>
-                    <div class="nav-item" style="color: var(--text-muted); cursor: not-allowed;">
-                        Mecanismo IA <span class="plugin-tag">Em dev</span>
+                <h2 style="text-align: left; margin: 0;">Painel AVDC</h2>
+                <p style="color: var(--text-support); font-size: 14px;">Logado como: <strong id="logged-as">Admin</strong></p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+
+        <div class="grid-admin" id="admin-content">
+            <div class="card">
+                <h3>Gerar Novo Usuário</h3>
+                <p style="font-size: 13px; color: var(--text-support); margin-bottom: 15px;">Crie acessos para os colaboradores.</p>
+                
+                <form id="form-create-user" onsubmit="createUser(event)">
+                    <div class="form-group">
+                        <label>ID do Usuário</label>
+                        <input type="text" id="new-user-id" placeholder="Ex: joao.silva" required>
+                    </div>
+                    <button type="submit" class="btn-submit" style="background-color: var(--success);">Gerar Token de Acesso</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Usuários Ativos e Tokens Diários</h3>
+                <div class="user-list" id="users-list-container">
+                    <div class="user-item">
+                        <span>admin (Você)</span>
+                        <span class="token-badge" style="background-color: #29292e;">Acesso Direto</span>
                     </div>
                 </div>
-            </div>
-            <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
-                Conectado como: <span id="userDisplay" style="color: var(--accent-color);"></span>
             </div>
         </div>
 
-        <div class="main-content">
-            
-            <div id="searchSection" class="view-section">
-                <h2>Pesquisa de Conhecimento</h2>
-                <div class="search-box">
-                    <input type="text" placeholder="Digite termos de busca nos seus repositórios indexados...">
-                    <button class="btn" style="width: auto; padding: 0 1.5rem;">Buscar</button>
-                </div>
-                
-                <h3>Resultados da Busca</h3>
-                <div class="results-list" style="margin-top: 1rem;">
-                    <div class="result-item">
-                        <h4>20260525fedoragpt.json</h4>
-                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Trecho: "...instruções sobre a atualização do KDE Plasma 6 no Fedora 44..."</p>
-                        <a href="https://github.com/Clayper/DadosRep/tree/main/chats/20260525fedoragpt.json" target="_blank">Abrir fonte original ↗</a>
-                    </div>
-                    <div class="result-item">
-                        <h4>20260625sambagpt.json</h4>
-                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Trecho: "...configuração de diretórios compartilhados utilizando o Samba..."</p>
-                        <a href="https://github.com/Clayper/DadosRep/tree/main/chats/20260625sambagpt.json" target="_blank">Abrir fonte original ↗</a>
-                    </div>
-                </div>
+        <div id="user-content" style="display: none;">
+            <div class="card">
+                <h3>Bem-vindo ao AVDC</h3>
+                <p style="margin-top: 10px; color: var(--text-support);">Você está logado como usuário comum utilizando o token diário válido.</p>
             </div>
-
-            <div id="configSection" class="view-section hidden">
-                <h2>Estrutura de Repositórios</h2>
-                
-                <div class="config-card">
-                    <h4>1. Configuração do Repositório de Dados (Origem)</h4>
-                    <div class="form-group">
-                        <label>URL do Repositório do GitHub ou Caminho Local</label>
-                        <input type="text" id="repoDataPath" value="https://github.com/Clayper/DadosRep">
-                    </div>
-                </div>
-
-                <div class="config-card">
-                    <h4>2. Configuração do Diretório de Índice (Metadados Isolados)</h4>
-                    <div class="form-group">
-                        <label>Diretório Local/Separado para salvar Índices e Caches</label>
-                        <input type="text" id="indexDataPath" value="D:\PROJETOSHTML\avdc-core\storage\indices">
-                    </div>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">
-                        * Conforme as diretrizes: O índice é gerado estritamente dentro desta pasta controlada, nunca alterando os arquivos originais.
-                    </p>
-                </div>
-                <button class="btn" style="width: auto; padding: 0.75rem 2rem;" onclick="alert('Configurações salvas localmente!')">Salvar Configurações</button>
-            </div>
-
         </div>
     </div>
 
     <script>
-        // Alternar entre blocos de login e cadastro simplificado
-        function toggleAuth(isRegister) {
-            document.getElementById('loginBlock').classList.toggle('hidden', isRegister);
-            document.getElementById('registerBlock').classList.toggle('hidden', !isRegister);
-        }
+        // Banco de dados em memória temporária para o protótipo
+        let dbUsers = [];
 
-        // Fluxo simulado de Login utilizando ID + Senha/Token Diário
-        function login() {
-            const uid = document.getElementById('loginId').value;
-            const token = document.getElementById('loginToken').value;
+        function switchTab(type) {
+            const adminBtn = document.querySelectorAll('.tab-btn')[0];
+            const userBtn = document.querySelectorAll('.tab-btn')[1];
+            const adminForm = document.getElementById('form-admin');
+            const userForm = document.getElementById('form-user');
 
-            if(!uid || !token) {
-                alert('Por favor, insira o seu ID e o Token Diário.');
-                return;
+            if (type === 'admin') {
+                adminBtn.classList.add('active');
+                userBtn.classList.remove('active');
+                adminForm.style.display = 'block';
+                userForm.style.display = 'none';
+            } else {
+                userBtn.classList.add('active');
+                adminBtn.classList.remove('active');
+                adminForm.style.display = 'none';
+                userForm.style.display = 'block';
             }
-
-            // Ativa visualização do sistema principal
-            document.getElementById('authView').classList.add('hidden');
-            document.getElementById('appView').classList.remove('hidden');
-            document.getElementById('userDisplay').innerText = uid;
         }
 
-        // Fluxo simplificado de geração de ID
-        function register() {
-            const uid = document.getElementById('regId').value;
-            if(!uid) {
-                alert('Insira um ID válido.');
-                return;
+        function handleLogin(event, role) {
+            event.preventDefault();
+            
+            const loginContainer = document.getElementById('login-container');
+            const dashboard = document.getElementById('dashboard');
+            const loggedAsLabel = document.getElementById('logged-as');
+            const adminContent = document.getElementById('admin-content');
+            const userContent = document.getElementById('user-content');
+
+            loginContainer.style.display = 'none';
+            dashboard.style.display = 'block';
+
+            if (role === 'admin') {
+                const userVal = document.getElementById('admin-user').value;
+                loggedAsLabel.textContent = `${userVal} (Administrador)`;
+                adminContent.style.display = 'grid';
+                userContent.style.display = 'none';
+            } else {
+                const userVal = document.getElementById('user-id').value;
+                loggedAsLabel.textContent = `${userVal} (Usuário)`;
+                adminContent.style.display = 'none';
+                userContent.style.display = 'block';
             }
-            alert(`Acesso criado para ${uid}! Use seu Token Diário gerado hoje para logar.`);
-            toggleAuth(false);
         }
 
-        // Gerenciamento de abas/telas do Painel Principal
-        function switchView(viewName) {
-            const isSearch = viewName === 'search';
+        function createUser(event) {
+            event.preventDefault();
+            const inputId = document.getElementById('new-user-id');
+            const userId = inputId.value.trim();
+
+            if(!userId) return;
+
+            // Gera um token randômico simulando o token do dia
+            const mockToken = Math.floor(100000 + Math.random() * 900000);
+
+            dbUsers.push({ id: userId, token: mockToken });
+            inputId.value = '';
             
-            document.getElementById('searchSection').classList.toggle('hidden', !isSearch);
-            document.getElementById('configSection').classList.toggle('hidden', isSearch);
-            
-            document.getElementById('menuSearchBtn').classList.toggle('active', isSearch);
-            document.getElementById('menuConfigBtn').classList.toggle('active', !isSearch);
+            renderUsers();
+        }
+
+        function renderUsers() {
+            const container = document.getElementById('users-list-container');
+            // Mantém o admin estático e renderiza os novos
+            container.innerHTML = `
+                <div class="user-item">
+                    <span>admin (Você)</span>
+                    <span class="token-badge" style="background-color: #29292e;">Acesso Direto</span>
+                </div>
+            `;
+
+            dbUsers.forEach(u => {
+                container.innerHTML += `
+                    <div class="user-item">
+                        <span>${u.id}</span>
+                        <span class="token-badge">${u.token}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function logout() {
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            // Limpa os campos de login
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('user-id').value = '';
+            document.getElementById('user-token').value = '';
         }
     </script>
 </body>
