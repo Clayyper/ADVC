@@ -1,13 +1,15 @@
 /**
- * AVDC v2.0 MVP
- * Backend Node.js + Express + SQLite
+ * AVDC v2.3
+ * Núcleo administrativo sem GitHub.
  *
- * Princípios:
- * - Código do sistema não apaga dados do usuário.
- * - Banco SQLite fica separado do frontend.
- * - Admin cria identidade.
- * - Usuário conecta seus próprios dados.
- * - IA fica apenas preparada para versão futura.
+ * Objetivo desta etapa:
+ * - Criar banco persistente do AVDC.
+ * - Criar login de administrador.
+ * - Permitir troca da senha do admin.
+ * - Cadastrar usuários com nome, código único e token.
+ * - Listar, excluir e regenerar token de usuários.
+ *
+ * GitHub, repositório, índice e IA ficam para etapas futuras.
  */
 
 require("dotenv").config();
@@ -19,8 +21,6 @@ const path = require("path");
 const { initDatabase } = require("./src/db");
 const authRoutes = require("./src/routes/auth");
 const adminRoutes = require("./src/routes/admin");
-const userRoutes = require("./src/routes/user");
-const githubRoutes = require("./src/routes/github");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,13 +44,16 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/user", userRoutes);
-app.use("/auth/github", githubRoutes);
 
 app.get("/health", (req, res) => {
-  res.json({ ok: true, app: "AVDC", version: "2.0.0" });
+  res.json({
+    ok: true,
+    app: "AVDC",
+    version: "2.3.0",
+    module: "admin-db"
+  });
 });
 
 app.listen(PORT, () => {
-  console.log(`AVDC rodando na porta ${PORT}`);
+  console.log(`AVDC Admin DB v2.3 rodando na porta ${PORT}`);
 });

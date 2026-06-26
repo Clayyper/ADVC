@@ -1,7 +1,7 @@
 {
-  "name": "avdc-node-v2",
-  "version": "2.0.0",
-  "description": "AVDC v2.0 MVP - Node.js, Express, SQLite e GitHub OAuth",
+  "name": "avdc-admin-db-v2-3",
+  "version": "2.3.0",
+  "description": "AVDC v2.3 - Banco administrativo sem GitHub",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

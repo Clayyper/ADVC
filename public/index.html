@@ -3,20 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVDC v2.0</title>
+<title>AVDC v2.3 - Administração</title>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
 <div class="container login-container" id="login-screen">
-  <div class="version-badge">v2.0</div>
-  <h2>AVDC - Acesso</h2>
-  <p>Admin cria identidade. Usuário conecta seus próprios dados.</p>
+  <div class="version-badge">v2.3</div>
 
-  <div class="tabs">
-    <button class="tab-btn active" id="tab-admin">Administrador</button>
-    <button class="tab-btn" id="tab-user">Usuário comum</button>
-  </div>
+  <h2>AVDC - Administração</h2>
+  <p>Primeira etapa: banco administrativo do AVDC, sem GitHub.</p>
 
   <form id="form-admin">
     <label>Usuário administrador</label>
@@ -25,133 +21,134 @@
     <label>Senha administrador</label>
     <input id="admin-pass" type="password" placeholder="Senha inicial: admin123" required>
 
-    <button class="btn btn-full">Entrar como Admin</button>
-  </form>
-
-  <form id="form-user" class="hidden">
-    <label>Código do usuário</label>
-    <input id="login-user-code" required>
-
-    <label>Token do usuário</label>
-    <input id="login-user-token" required>
-
-    <button class="btn btn-full">Validar e entrar</button>
+    <button class="btn btn-full">Entrar</button>
   </form>
 
   <div id="login-msg" class="msg"></div>
+
+  <div class="note">
+    <p><strong>Escopo desta versão:</strong></p>
+    <p>Admin, banco de usuários, código único e token.</p>
+    <p>GitHub será implementado depois, como módulo separado.</p>
+  </div>
 </div>
 
 <div class="container hidden" id="app-screen">
-  <div class="version-badge">v2.0</div>
+  <div class="version-badge">v2.3</div>
 
   <div class="header">
     <div>
-      <h2>Painel AVDC</h2>
-      <p>Logado como: <strong id="logged-as"></strong></p>
+      <h2>Painel Administrativo AVDC</h2>
+      <p>Logado como: <strong id="logged-as">admin</strong></p>
     </div>
+
     <button class="btn btn-danger" id="btn-logout">Sair</button>
   </div>
 
   <div class="grid">
     <nav class="menu">
-      <button data-page="buscar" class="active">Pesquisar</button>
-      <button data-page="github">GitHub</button>
-      <button data-page="indice">Índice</button>
-      <button data-page="ia">Interface IA</button>
-      <button data-page="sobre">Sobre</button>
-      <button data-page="admin" id="admin-menu-btn">Admin</button>
+      <button data-page="dashboard" class="active">Resumo</button>
+      <button data-page="usuarios">Usuários</button>
+      <button data-page="senha">Senha Admin</button>
+      <button data-page="futuro">Próximas Etapas</button>
     </nav>
 
     <main>
-      <section id="page-buscar">
+      <section id="page-dashboard">
         <div class="card">
-          <h3>Busca AVDC</h3>
-          <p>Busca simulada usando repositório e índice configurados no banco.</p>
+          <h3>Resumo do Banco Administrativo</h3>
 
-          <label>Pesquisar</label>
-          <input id="search-input" placeholder="Ex: Linux, Samba, Progress...">
+          <div class="cards-row">
+            <div class="mini-card">
+              <strong id="total-users">0</strong>
+              <span>Usuários cadastrados</span>
+            </div>
 
-          <button class="btn" id="btn-search">Buscar</button>
-        </div>
+            <div class="mini-card">
+              <strong id="active-users">0</strong>
+              <span>Usuários ativos</span>
+            </div>
+          </div>
 
-        <div class="card">
-          <h3>Resultados</h3>
-          <div id="results-container">Nenhuma busca realizada.</div>
-        </div>
-      </section>
-
-      <section id="page-github" class="hidden">
-        <div class="card">
-          <h3>Conexão GitHub</h3>
-          <p>O usuário autoriza o próprio GitHub. O admin não fornece dados.</p>
-
-          <button class="btn" id="btn-connect-github">Conectar GitHub</button>
-          <button class="btn" id="btn-load-repos">Listar repositórios</button>
-
-          <div id="github-status" class="msg"></div>
-        </div>
-
-        <div class="card">
-          <h3>Repositórios</h3>
-          <div id="repos-container">Nenhum repositório carregado.</div>
+          <div class="note">
+            <p>Este banco pertence ao AVDC.</p>
+            <p>Ele não fica dentro do GitHub.</p>
+            <p>O GitHub será apenas uma conexão futura feita pelo próprio usuário.</p>
+          </div>
         </div>
       </section>
 
-      <section id="page-indice" class="hidden">
-        <div class="card">
-          <h3>Configuração do Índice</h3>
-
-          <label>Repositório/caminho do índice</label>
-          <input id="index-path" placeholder="Ex: .avdc/index ou repositorio-indice">
-
-          <button class="btn" id="btn-save-index">Salvar índice</button>
-          <button class="btn btn-warning" id="btn-rebuild-index">Atualizar índice</button>
-
-          <div id="index-msg" class="msg"></div>
-        </div>
-      </section>
-
-      <section id="page-ia" class="hidden">
-        <div class="card">
-          <h3>Interface IA</h3>
-          <p><span class="badge badge-warning">Em desenvolvimento</span></p>
-          <p>A IA é opcional. Nenhum token será solicitado nesta versão.</p>
-        </div>
-      </section>
-
-      <section id="page-sobre" class="hidden">
-        <div class="card">
-          <h3>Sobre o AVDC</h3>
-          <p>Os dados pertencem ao usuário.</p>
-          <p>Admin cria identidade. Usuário conecta dados.</p>
-          <p>Atualizações do sistema não apagam o banco.</p>
-        </div>
-      </section>
-
-      <section id="page-admin" class="hidden">
-        <div class="card">
-          <h3>Trocar senha do Admin</h3>
-          <label>Nova senha</label>
-          <input id="new-admin-pass" type="password">
-          <button class="btn" id="btn-change-admin-pass">Salvar nova senha</button>
-          <div id="admin-pass-msg" class="msg"></div>
-        </div>
-
+      <section id="page-usuarios" class="hidden">
         <div class="card">
           <h3>Criar usuário</h3>
-          <label>Nome</label>
-          <input id="new-user-name" placeholder="Ex: Clayson">
+          <p>O código do usuário é único. Não pode repetir.</p>
 
-          <label>Código único</label>
-          <input id="new-user-code" placeholder="Ex: clay">
+          <div class="form-grid">
+            <div>
+              <label>Nome do usuário</label>
+              <input id="new-user-name" placeholder="Ex: Pedro Silva">
+            </div>
 
-          <button class="btn btn-success" id="btn-create-user">Criar usuário e token</button>
+            <div>
+              <label>Código único</label>
+              <div class="input-action">
+                <input id="new-user-code" placeholder="Ex: pedro.silva">
+                <button class="btn btn-secondary" id="btn-suggest-code" type="button">Sugerir</button>
+              </div>
+              <small>Use letras, números, ponto, hífen ou underline.</small>
+            </div>
+          </div>
+
+          <button class="btn btn-success" id="btn-create-user">Criar usuário e gerar token</button>
+
           <div id="create-user-msg" class="msg"></div>
+
+          <div id="new-user-result" class="created-user-box hidden">
+            <h4>Usuário criado</h4>
+            <p><strong>Nome:</strong> <span id="created-name"></span></p>
+            <p><strong>Código:</strong> <span class="badge" id="created-code"></span></p>
+            <p><strong>Token:</strong> <span class="badge token-big" id="created-token"></span></p>
+            <button class="btn" id="btn-copy-created-token" type="button">Copiar token</button>
+          </div>
         </div>
 
         <div class="card">
-          <h3>Usuários</h3>
-          <div id="users-container">Nenhum usuário carregado.</div>
+          <div class="card-title-row">
+            <h3>Usuários cadastrados</h3>
+            <input id="user-filter" placeholder="Filtrar por nome ou código...">
+          </div>
+
+          <div id="users-container">
+            Nenhum usuário carregado.
+          </div>
+        </div>
+      </section>
+
+      <section id="page-senha" class="hidden">
+        <div class="card">
+          <h3>Trocar senha do administrador</h3>
+
+          <label>Nova senha</label>
+          <input id="new-admin-pass" type="password">
+
+          <button class="btn" id="btn-change-admin-pass">Salvar nova senha</button>
+
+          <div id="admin-pass-msg" class="msg"></div>
+        </div>
+      </section>
+
+      <section id="page-futuro" class="hidden">
+        <div class="card">
+          <h3>Próximas etapas</h3>
+
+          <div class="note">
+            <p><strong>Etapa 1:</strong> Banco administrativo. Concluindo agora.</p>
+            <p><strong>Etapa 2:</strong> Login do usuário comum.</p>
+            <p><strong>Etapa 3:</strong> Conexão GitHub por usuário.</p>
+            <p><strong>Etapa 4:</strong> Escolha de repositório.</p>
+            <p><strong>Etapa 5:</strong> Índice e busca.</p>
+            <p><strong>Etapa futura:</strong> IA como plugin opcional.</p>
+          </div>
         </div>
       </section>
     </main>
