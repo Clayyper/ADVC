@@ -1,313 +1,595 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVDC v1.4 - Painel de Acesso</title>
-    <style>
-        :root {
-            --bg-color: #121214;
-            --card-bg: #202024;
-            --text-color: #e1e1e6;
-            --text-support: #a8a8b3;
-            --primary-color: #8257e5;
-            --primary-hover: #9466ff;
-            --danger: #f75a68;
-            --success: #00b37e;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVDC v1.5</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: sans-serif;
-        }
+<style>
+:root {
+    --bg: #121214;
+    --card: #202024;
+    --card2: #29292e;
+    --text: #e1e1e6;
+    --muted: #a8a8b3;
+    --primary: #8257e5;
+    --primary-hover: #9466ff;
+    --danger: #f75a68;
+    --success: #00b37e;
+    --warning: #fba94c;
+}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            position: relative;
-        }
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        .version-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #29292e;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: var(--text-support);
-            font-family: monospace;
-        }
+.container {
+    background: var(--card);
+    max-width: 980px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    position: relative;
+}
 
-        h2 {
-            margin-bottom: 24px;
-            text-align: center;
-            color: #fff;
-        }
+.login-box {
+    max-width: 450px;
+    margin-top: 8vh;
+}
 
-        .tabs {
-            display: flex;
-            margin-bottom: 24px;
-            border-bottom: 2px solid #29292e;
-        }
+.version {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--card2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: monospace;
+}
 
-        .tab-btn {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-support);
-            padding: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
+h2, h3 {
+    margin-bottom: 18px;
+}
 
-        .tab-btn.active {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: -2px;
-        }
+p {
+    color: var(--muted);
+    margin-bottom: 12px;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.tabs {
+    display: flex;
+    margin-bottom: 22px;
+    border-bottom: 2px solid var(--card2);
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--text-support);
-        }
+.tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 4px;
-            border: 1px solid #29292e;
-            background-color: #121214;
-            color: #fff;
-            font-size: 16px;
-        }
+.tab.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    margin-bottom: -2px;
+}
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
+.form-group {
+    margin-bottom: 16px;
+}
 
-        button.btn-submit {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--muted);
+    font-size: 14px;
+}
 
-        button.btn-submit:hover {
-            background-color: var(--primary-hover);
-        }
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--card2);
+    border-radius: 4px;
+    background: var(--bg);
+    color: white;
+    font-size: 15px;
+}
 
-        #dashboard {
-            max-width: 900px;
-            width: 100%;
-        }
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
 
-        .dash-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #29292e;
-        }
+button {
+    cursor: pointer;
+}
 
-        .grid-admin {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
+.btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+}
 
-        @media (max-width: 768px) {
-            .grid-admin {
-                grid-template-columns: 1fr;
-            }
-        }
+.btn:hover {
+    background: var(--primary-hover);
+}
 
-        .card {
-            background-color: #29292e;
-            padding: 24px;
-            border-radius: 6px;
-        }
+.btn-success {
+    background: var(--success);
+}
 
-        .user-list {
-            margin-top: 15px;
-        }
+.btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    padding: 8px 14px;
+    border-radius: 4px;
+}
 
-        .user-item {
-            background-color: #121214;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.msg {
+    margin-top: 14px;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
 
-        .token-badge {
-            background-color: var(--primary-color);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 14px;
-        }
+.msg.error {
+    display: block;
+    background: rgba(247,90,104,0.12);
+    color: var(--danger);
+}
 
-        .logout-btn {
-            background: none;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+.msg.ok {
+    display: block;
+    background: rgba(0,179,126,0.12);
+    color: var(--success);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--card2);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+}
+
+.menu {
+    background: var(--card2);
+    padding: 16px;
+    border-radius: 6px;
+}
+
+.menu button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    text-align: left;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.menu button.active,
+.menu button:hover {
+    background: var(--primary);
+}
+
+.card {
+    background: var(--card2);
+    padding: 22px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.user-item,
+.result-item {
+    background: var(--bg);
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.badge {
+    background: var(--primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.status-ok {
+    color: var(--success);
+}
+
+.status-warning {
+    color: var(--warning);
+}
+
+.hidden {
+    display: none;
+}
+
+@media(max-width: 760px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container" id="login-container">
-        <div class="version-badge">v1.4</div>
-        <h2>AVDC - Acesso</h2>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('admin')">Administrador</button>
-            <button class="tab-btn" onclick="switchTab('user')">Usuário Comum</button>
-        </div>
-        <form id="form-admin" onsubmit="handleLogin(event, 'admin')">
-            <div class="form-group">
-                <label for="admin-user">Usuário Administrador</label>
-                <input type="text" id="admin-user" placeholder="Ex: admin" required>
-            </div>
-            <div class="form-group">
-                <label for="admin-pass">Senha (Qualquer valor libera)</label>
-                <input type="password" id="admin-pass" placeholder="Digite sua senha fixa">
-            </div>
-            <button type="submit" class="btn-submit">Entrar como Admin</button>
-        </form>
-        <form id="form-user" onsubmit="handleLogin(event, 'user')" style="display: none;">
-            <div class="form-group">
-                <label for="user-id">ID do Usuário</label>
-                <input type="text" id="user-id" placeholder="Ex: user123" required>
-            </div>
-            <div class="form-group">
-                <label for="user-token">Token Diário</label>
-                <input type="text" id="user-token" placeholder="Digite o token" required>
-            </div>
-            <button type="submit" class="btn-submit">Validar e Entrar</button>
-        </form>
+<div class="container login-box" id="login-screen">
+    <div class="version">v1.5</div>
+
+    <h2>AVDC - Acesso</h2>
+
+    <div class="tabs">
+        <button class="tab active" id="tab-admin" onclick="switchTab('admin')">Administrador</button>
+        <button class="tab" id="tab-user" onclick="switchTab('user')">Usuário</button>
     </div>
 
-    <div class="container" id="dashboard" style="display: none;">
-        <div class="version-badge">v1.4</div>
-        <div class="dash-header">
-            <div>
-                <h2 style="text-align: left; margin: 0;">Painel AVDC</h2>
-                <p style="color: var(--text-support); font-size: 14px;">Logado como: <strong id="logged-as">Admin</strong></p>
-            </div>
-            <button class="logout-btn" onclick="logout()">Sair</button>
+    <form id="admin-form" onsubmit="loginAdmin(event)">
+        <div class="form-group">
+            <label>Usuário administrador</label>
+            <input id="admin-user" type="text" value="admin" required>
         </div>
-        <div class="grid-admin" id="admin-content">
-            <div class="card">
-                <h3>Gerar Novo Usuário</h3>
-                <form id="form-create-user" onsubmit="createUser(event)">
+
+        <div class="form-group">
+            <label>Senha administrador</label>
+            <input id="admin-pass" type="password" placeholder="Senha: admin123" required>
+        </div>
+
+        <button class="btn" type="submit">Entrar como Admin</button>
+    </form>
+
+    <form id="user-form" class="hidden" onsubmit="loginUser(event)">
+        <div class="form-group">
+            <label>ID do usuário</label>
+            <input id="login-user-id" type="text" placeholder="Ex: joao" required>
+        </div>
+
+        <div class="form-group">
+            <label>Token diário</label>
+            <input id="login-user-token" type="text" placeholder="Ex: 123456" required>
+        </div>
+
+        <button class="btn" type="submit">Validar e Entrar</button>
+    </form>
+
+    <div id="login-msg" class="msg"></div>
+</div>
+
+<div class="container hidden" id="app-screen">
+    <div class="version">v1.5</div>
+
+    <div class="header">
+        <div>
+            <h2>Painel AVDC</h2>
+            <p>Logado como: <strong id="logged-as"></strong></p>
+        </div>
+
+        <button class="btn-danger" onclick="logout()">Sair</button>
+    </div>
+
+    <div class="grid">
+        <div class="menu">
+            <button class="active" onclick="showPage('buscar', this)">Pesquisar</button>
+            <button onclick="showPage('repositorio', this)">Repositório de Dados</button>
+            <button onclick="showPage('indice', this)">Diretório de Índice</button>
+            <button onclick="showPage('plugins', this)">Plugins</button>
+            <button id="admin-menu-btn" onclick="showPage('admin', this)">Admin</button>
+        </div>
+
+        <main>
+            <section id="page-buscar">
+                <div class="card">
+                    <h3>Busca AVDC</h3>
+                    <p>As buscas usam o índice existente. O AVDC não altera os arquivos originais.</p>
+
                     <div class="form-group">
-                        <label>ID do Usuário</label>
-                        <input type="text" id="new-user-id" placeholder="Ex: joao.silva" required>
+                        <label>Pesquisar</label>
+                        <input id="search-input" placeholder="Ex: Samba, Linux, Progress..." onkeydown="if(event.key==='Enter') searchMock()">
                     </div>
-                    <button type="submit" class="btn-submit" style="background-color: var(--success);">Gerar Token</button>
-                </form>
-            </div>
-            <div class="card">
-                <h3>Usuários Ativos e Tokens</h3>
-                <div class="user-list" id="users-list-container">
-                    <div class="user-item"><span>admin (Você)</span><span class="token-badge" style="background-color: #29292e;">Acesso Direto</span></div>
-                </div>
-            </div>
-        </div>
-        <div id="user-content" style="display: none;">
-            <div class="card">
-                <h3>Bem-vindo ao AVDC</h3>
-                <p style="margin-top: 10px; color: var(--text-support);">Logado como usuário comum utilizando token válido.</p>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        let dbUsers = [];
-        function switchTab(type) {
-            const tabs = document.querySelectorAll('.tab-btn');
-            if (type === 'admin') {
-                tabs[0].classList.add('active'); tabs[1].classList.remove('active');
-                document.getElementById('form-admin').style.display = 'block';
-                document.getElementById('form-user').style.display = 'none';
-            } else {
-                tabs[1].classList.add('active'); tabs[0].classList.remove('active');
-                document.getElementById('form-admin').style.display = 'none';
-                document.getElementById('form-user').style.display = 'block';
-            }
-        }
-        function handleLogin(event, role) {
-            event.preventDefault();
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            const label = document.getElementById('logged-as');
-            if (role === 'admin') {
-                label.textContent = document.getElementById('admin-user').value + " (Admin)";
-                document.getElementById('admin-content').style.display = 'grid';
-                document.getElementById('user-content').style.display = 'none';
-            } else {
-                label.textContent = document.getElementById('user-id').value + " (Usuário)";
-                document.getElementById('admin-content').style.display = 'none';
-                document.getElementById('user-content').style.display = 'block';
-            }
-        }
-        function createUser(event) {
-            event.preventDefault();
-            const input = document.getElementById('new-user-id');
-            const val = input.value.trim();
-            if(!val) return;
-            const token = Math.floor(100000 + Math.random() * 900000);
-            dbUsers.push({ id: val, token: token });
-            input.value = '';
-            renderUsers();
-        }
-        function renderUsers() {
-            const container = document.getElementById('users-list-container');
-            container.innerHTML = `<div class="user-item"><span>admin (Você)</span><span class="token-badge" style="background-color: #29292e;">Acesso Direto</span></div>`;
-            dbUsers.forEach(u => {
-                container.innerHTML += `<div class="user-item"><span>${u.id}</span><span class="token-badge">${u.token}</span></div>`;
-            });
-        }
-        function logout() {
-            document.getElementById('login-container').style.display = 'block';
-            document.getElementById('dashboard').style.display = 'none';
-        }
-    </script>
+                    <button class="btn" onclick="searchMock()">Buscar</button>
+                </div>
+
+                <div class="card">
+                    <h3>Resultados</h3>
+                    <div id="results">
+                        <p>Nenhuma busca realizada.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-repositorio" class="hidden">
+                <div class="card">
+                    <h3>Configuração do Repositório</h3>
+                    <p>Fonte dos dados do usuário. Acesso somente leitura.</p>
+
+                    <div class="form-group">
+                        <label>Caminho do repositório</label>
+                        <input id="repo-path" value="/home/clay/Conhecimento">
+                    </div>
+
+                    <button class="btn">Salvar configuração</button>
+                </div>
+            </section>
+
+            <section id="page-indice" class="hidden">
+                <div class="card">
+                    <h3>Diretório de Índice</h3>
+                    <p>O índice é separado dos dados originais e pode ser reconstruído quando o usuário quiser.</p>
+
+                    <div class="form-group">
+                        <label>Caminho do índice</label>
+                        <input id="index-path" value="/home/clay/.avdc/index">
+                    </div>
+
+                    <p>Status: <strong class="status-ok">Índice existente</strong></p>
+                    <p>Última atualização: <span id="index-date">26/06/2026</span></p>
+
+                    <button class="btn btn-success" onclick="rebuildIndex()">Atualizar índice</button>
+                    <div id="index-msg" class="msg"></div>
+                </div>
+            </section>
+
+            <section id="page-plugins" class="hidden">
+                <div class="card">
+                    <h3>Plugins</h3>
+                    <p class="status-warning">Em desenvolvimento</p>
+                </div>
+            </section>
+
+            <section id="page-admin" class="hidden">
+                <div class="card">
+                    <h3>Gerar usuário comum</h3>
+
+                    <form onsubmit="createUser(event)">
+                        <div class="form-group">
+                            <label>ID do usuário</label>
+                            <input id="new-user-id" placeholder="Ex: joao.silva" required>
+                        </div>
+
+                        <button class="btn btn-success" type="submit">Gerar token</button>
+                    </form>
+
+                    <div id="create-msg" class="msg"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Usuários cadastrados</h3>
+                    <div id="users-list"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem("avdc_users_v15")) || [];
+
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "admin123";
+
+function saveUsers() {
+    localStorage.setItem("avdc_users_v15", JSON.stringify(users));
+}
+
+function setMessage(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = "msg " + type;
+}
+
+function clearMessage(id) {
+    const el = document.getElementById(id);
+    el.textContent = "";
+    el.className = "msg";
+}
+
+function switchTab(type) {
+    clearMessage("login-msg");
+
+    document.getElementById("tab-admin").classList.toggle("active", type === "admin");
+    document.getElementById("tab-user").classList.toggle("active", type === "user");
+
+    document.getElementById("admin-form").classList.toggle("hidden", type !== "admin");
+    document.getElementById("user-form").classList.toggle("hidden", type !== "user");
+}
+
+function loginAdmin(event) {
+    event.preventDefault();
+
+    const user = document.getElementById("admin-user").value.trim();
+    const pass = document.getElementById("admin-pass").value.trim();
+
+    if (user !== ADMIN_USER || pass !== ADMIN_PASS) {
+        setMessage("login-msg", "Administrador ou senha inválidos.", "error");
+        return;
+    }
+
+    openApp("Administrador", "admin");
+}
+
+function loginUser(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("login-user-id").value.trim();
+    const token = document.getElementById("login-user-token").value.trim();
+
+    const found = users.find(u => u.id === id && String(u.token) === token);
+
+    if (!found) {
+        setMessage("login-msg", "Usuário ou token inválido. Gere um token pelo painel Admin.", "error");
+        return;
+    }
+
+    openApp(id, "user");
+}
+
+function openApp(name, role) {
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("app-screen").classList.remove("hidden");
+
+    document.getElementById("logged-as").textContent =
+        role === "admin" ? name + " (Admin)" : name + " (Usuário)";
+
+    document.getElementById("admin-menu-btn").style.display =
+        role === "admin" ? "block" : "none";
+
+    showPage("buscar", document.querySelector(".menu button"));
+    renderUsers();
+}
+
+function logout() {
+    document.getElementById("app-screen").classList.add("hidden");
+    document.getElementById("login-screen").classList.remove("hidden");
+    clearMessage("login-msg");
+}
+
+function showPage(page, btn) {
+    const pages = ["buscar", "repositorio", "indice", "plugins", "admin"];
+
+    pages.forEach(p => {
+        document.getElementById("page-" + p).classList.add("hidden");
+    });
+
+    document.getElementById("page-" + page).classList.remove("hidden");
+
+    document.querySelectorAll(".menu button").forEach(b => b.classList.remove("active"));
+
+    if (btn) btn.classList.add("active");
+}
+
+function createUser(event) {
+    event.preventDefault();
+
+    const input = document.getElementById("new-user-id");
+    const id = input.value.trim();
+
+    if (!id) return;
+
+    const exists = users.some(u => u.id === id);
+
+    if (exists) {
+        setMessage("create-msg", "Esse usuário já existe.", "error");
+        return;
+    }
+
+    const token = Math.floor(100000 + Math.random() * 900000);
+
+    users.push({
+        id,
+        token,
+        createdAt: new Date().toLocaleString("pt-BR")
+    });
+
+    saveUsers();
+    renderUsers();
+
+    input.value = "";
+    setMessage("create-msg", "Usuário criado com sucesso. Token: " + token, "ok");
+}
+
+function renderUsers() {
+    const box = document.getElementById("users-list");
+
+    if (!box) return;
+
+    if (users.length === 0) {
+        box.innerHTML = "<p>Nenhum usuário comum cadastrado.</p>";
+        return;
+    }
+
+    box.innerHTML = "";
+
+    users.forEach((u, index) => {
+        box.innerHTML += `
+            <div class="user-item">
+                <span>${u.id}</span>
+                <span>
+                    <span class="badge">${u.token}</span>
+                    <button class="btn-danger" onclick="deleteUser(${index})">Excluir</button>
+                </span>
+            </div>
+        `;
+    });
+}
+
+function deleteUser(index) {
+    users.splice(index, 1);
+    saveUsers();
+    renderUsers();
+}
+
+function searchMock() {
+    const term = document.getElementById("search-input").value.trim();
+    const results = document.getElementById("results");
+
+    if (!term) {
+        results.innerHTML = "<p>Digite algo para pesquisar.</p>";
+        return;
+    }
+
+    results.innerHTML = `
+        <div class="result-item">
+            <span>Resultado simulado para: <strong>${term}</strong></span>
+            <button onclick="alert('Abriria o arquivo pelo caminho, sem alterar o original.')">Abrir</button>
+        </div>
+        <div class="result-item">
+            <span>/home/clay/Conhecimento/${term}.md</span>
+            <button onclick="alert('Copiaria ou abriria o caminho no navegador/sistema.')">Abrir caminho</button>
+        </div>
+    `;
+}
+
+function rebuildIndex() {
+    const now = new Date().toLocaleString("pt-BR");
+    document.getElementById("index-date").textContent = now;
+    setMessage("index-msg", "Índice atualizado manualmente pelo usuário.", "ok");
+}
+</script>
+
 </body>
 </html>
