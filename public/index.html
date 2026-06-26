@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVDC v2.0</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="container login-container" id="login-screen">
+  <div class="version-badge">v2.0</div>
+  <h2>AVDC - Acesso</h2>
+  <p>Admin cria identidade. Usuário conecta seus próprios dados.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-admin">Administrador</button>
+    <button class="tab-btn" id="tab-user">Usuário comum</button>
+  </div>
+
+  <form id="form-admin">
+    <label>Usuário administrador</label>
+    <input id="admin-user" value="admin" required>
+
+    <label>Senha administrador</label>
+    <input id="admin-pass" type="password" placeholder="Senha inicial: admin123" required>
+
+    <button class="btn btn-full">Entrar como Admin</button>
+  </form>
+
+  <form id="form-user" class="hidden">
+    <label>Código do usuário</label>
+    <input id="login-user-code" required>
+
+    <label>Token do usuário</label>
+    <input id="login-user-token" required>
+
+    <button class="btn btn-full">Validar e entrar</button>
+  </form>
+
+  <div id="login-msg" class="msg"></div>
+</div>
+
+<div class="container hidden" id="app-screen">
+  <div class="version-badge">v2.0</div>
+
+  <div class="header">
+    <div>
+      <h2>Painel AVDC</h2>
+      <p>Logado como: <strong id="logged-as"></strong></p>
+    </div>
+    <button class="btn btn-danger" id="btn-logout">Sair</button>
+  </div>
+
+  <div class="grid">
+    <nav class="menu">
+      <button data-page="buscar" class="active">Pesquisar</button>
+      <button data-page="github">GitHub</button>
+      <button data-page="indice">Índice</button>
+      <button data-page="ia">Interface IA</button>
+      <button data-page="sobre">Sobre</button>
+      <button data-page="admin" id="admin-menu-btn">Admin</button>
+    </nav>
+
+    <main>
+      <section id="page-buscar">
+        <div class="card">
+          <h3>Busca AVDC</h3>
+          <p>Busca simulada usando repositório e índice configurados no banco.</p>
+
+          <label>Pesquisar</label>
+          <input id="search-input" placeholder="Ex: Linux, Samba, Progress...">
+
+          <button class="btn" id="btn-search">Buscar</button>
+        </div>
+
+        <div class="card">
+          <h3>Resultados</h3>
+          <div id="results-container">Nenhuma busca realizada.</div>
+        </div>
+      </section>
+
+      <section id="page-github" class="hidden">
+        <div class="card">
+          <h3>Conexão GitHub</h3>
+          <p>O usuário autoriza o próprio GitHub. O admin não fornece dados.</p>
+
+          <button class="btn" id="btn-connect-github">Conectar GitHub</button>
+          <button class="btn" id="btn-load-repos">Listar repositórios</button>
+
+          <div id="github-status" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h3>Repositórios</h3>
+          <div id="repos-container">Nenhum repositório carregado.</div>
+        </div>
+      </section>
+
+      <section id="page-indice" class="hidden">
+        <div class="card">
+          <h3>Configuração do Índice</h3>
+
+          <label>Repositório/caminho do índice</label>
+          <input id="index-path" placeholder="Ex: .avdc/index ou repositorio-indice">
+
+          <button class="btn" id="btn-save-index">Salvar índice</button>
+          <button class="btn btn-warning" id="btn-rebuild-index">Atualizar índice</button>
+
+          <div id="index-msg" class="msg"></div>
+        </div>
+      </section>
+
+      <section id="page-ia" class="hidden">
+        <div class="card">
+          <h3>Interface IA</h3>
+          <p><span class="badge badge-warning">Em desenvolvimento</span></p>
+          <p>A IA é opcional. Nenhum token será solicitado nesta versão.</p>
+        </div>
+      </section>
+
+      <section id="page-sobre" class="hidden">
+        <div class="card">
+          <h3>Sobre o AVDC</h3>
+          <p>Os dados pertencem ao usuário.</p>
+          <p>Admin cria identidade. Usuário conecta dados.</p>
+          <p>Atualizações do sistema não apagam o banco.</p>
+        </div>
+      </section>
+
+      <section id="page-admin" class="hidden">
+        <div class="card">
+          <h3>Trocar senha do Admin</h3>
+          <label>Nova senha</label>
+          <input id="new-admin-pass" type="password">
+          <button class="btn" id="btn-change-admin-pass">Salvar nova senha</button>
+          <div id="admin-pass-msg" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h3>Criar usuário</h3>
+          <label>Nome</label>
+          <input id="new-user-name" placeholder="Ex: Clayson">
+
+          <label>Código único</label>
+          <input id="new-user-code" placeholder="Ex: clay">
+
+          <button class="btn btn-success" id="btn-create-user">Criar usuário e token</button>
+          <div id="create-user-msg" class="msg"></div>
+        </div>
+
+        <div class="card">
+          <h3>Usuários</h3>
+          <div id="users-container">Nenhum usuário carregado.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
