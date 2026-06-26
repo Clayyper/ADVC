@@ -64,7 +64,10 @@ async function initDatabase() {
       user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
       github_connected INTEGER DEFAULT 0,
       github_login TEXT,
+      github_name TEXT,
+      github_avatar_url TEXT,
       github_token_encrypted TEXT,
+      github_connected_at TIMESTAMPTZ,
       selected_repo_full_name TEXT,
       index_location TEXT,
       index_path TEXT,
@@ -74,6 +77,15 @@ async function initDatabase() {
       updated_at TIMESTAMPTZ NOT NULL
     );
   `);
+
+  /*
+    Migrações seguras:
+    adicionam campos se não existirem.
+    Nunca removem dados.
+  */
+  await query(`ALTER TABLE user_future_config ADD COLUMN IF NOT EXISTS github_name TEXT;`);
+  await query(`ALTER TABLE user_future_config ADD COLUMN IF NOT EXISTS github_avatar_url TEXT;`);
+  await query(`ALTER TABLE user_future_config ADD COLUMN IF NOT EXISTS github_connected_at TIMESTAMPTZ;`);
 
   const admin = await getOne("SELECT id FROM admin_config WHERE id = 1");
 

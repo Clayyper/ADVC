@@ -95,6 +95,8 @@ async function loginUser(event) {
     $("user-logged-as").textContent = `${data.user.name} (${data.user.userCode})`;
     $("user-name-view").textContent = data.user.name;
     $("user-code-view").textContent = data.user.userCode;
+
+    await loadUserProfile();
   } catch (err) {
     msg("login-msg", err.message, "error");
   }
@@ -102,7 +104,7 @@ async function loginUser(event) {
 
 async function logout() {
   await api("/api/auth/logout", { method: "POST" });
-  location.reload();
+  location.href = "/";
 }
 
 async function loadDashboard() {
@@ -290,6 +292,59 @@ async function changeAdminPassword() {
   }
 }
 
+async function loadUserProfile() {
+  try {
+    const data = await api("/api/user/profile");
+    renderGithubStatus(data.github);
+  } catch (err) {
+    msg("github-msg", err.message, "error");
+  }
+}
+
+function renderGithubStatus(github) {
+  const connected = !!github?.connected;
+
+  $("github-status-label").textContent = connected ? "Conectado" : "Não conectado";
+  $("github-status-label").className = connected ? "badge badge-ok" : "badge badge-warning";
+
+  $("github-profile").classList.toggle("hidden", !connected);
+
+  $("btn-connect-github").classList.toggle("hidden", connected);
+  $("btn-change-github").classList.toggle("hidden", !connected);
+  $("btn-disconnect-github").classList.toggle("hidden", !connected);
+
+  if (connected) {
+    $("github-avatar").src = github.avatarUrl || "";
+    $("github-login").textContent = github.login || "-";
+    $("github-name").textContent = github.name || "-";
+    $("github-connected-at").textContent = formatDate(github.connectedAt);
+  } else {
+    $("github-avatar").src = "";
+    $("github-login").textContent = "-";
+    $("github-name").textContent = "-";
+    $("github-connected-at").textContent = "-";
+  }
+}
+
+function connectGithub() {
+  location.href = "/auth/github/connect";
+}
+
+async function disconnectGithub() {
+  if (!confirm("Desconectar GitHub deste usuário?")) return;
+
+  try {
+    await api("/auth/github/disconnect", {
+      method: "POST"
+    });
+
+    msg("github-msg", "GitHub desconectado.", "ok");
+    await loadUserProfile();
+  } catch (err) {
+    msg("github-msg", err.message, "error");
+  }
+}
+
 function escapeHTML(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -313,7 +368,7 @@ function formatDate(value) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   $("tab-admin").onclick = () => switchLoginTab("admin");
   $("tab-user").onclick = () => switchLoginTab("user");
 
@@ -332,4 +387,31 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btn-copy-created-token").onclick = copyCreatedToken;
   $("user-filter").oninput = renderUsers;
   $("btn-change-admin-pass").onclick = changeAdminPassword;
+
+  $("btn-connect-github").onclick = connectGithub;
+  $("btn-change-github").onclick = connectGithub;
+  $("btn-disconnect-github").onclick = disconnectGithub;
+
+  const params = new URLSearchParams(location.search);
+  if (params.get("github") === "connected") {
+    history.replaceState({}, "", "/");
+
+    try {
+      const me = await api("/api/auth/me");
+      if (me.authenticated && me.type === "user") {
+        $("login-screen").classList.add("hidden");
+        $("admin-screen").classList.add("hidden");
+        $("user-screen").classList.remove("hidden");
+
+        $("user-logged-as").textContent = `${me.user.name} (${me.user.userCode})`;
+        $("user-name-view").textContent = me.user.name;
+        $("user-code-view").textContent = me.user.userCode;
+
+        await loadUserProfile();
+        msg("github-msg", "GitHub conectado com sucesso.", "ok");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 });

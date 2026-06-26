@@ -8,6 +8,17 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+function requireUser(req, res, next) {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({
+      error: "Acesso restrito ao usuário comum."
+    });
+  }
+
+  next();
+}
+
 module.exports = {
-  requireAdmin
+  requireAdmin,
+  requireUser
 };

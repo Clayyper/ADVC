@@ -357,3 +357,26 @@ button {
   color:var(--primary-color);
   border-bottom:2px solid var(--primary-color);
 }
+
+
+.github-box {
+  background: var(--bg-color);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 6px;
+  margin: 14px 0;
+}
+
+#github-profile {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+}

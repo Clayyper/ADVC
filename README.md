@@ -1,55 +1,65 @@
-# AVDC v2.5 - PostgreSQL Persistente
+# AVDC v2.6 - Conectar GitHub do Usuário
 
-Esta versão troca SQLite por PostgreSQL usando `DATABASE_URL`.
+Esta versão mantém PostgreSQL e adiciona apenas a conexão GitHub do usuário.
 
-## Objetivo
+## Escopo
 
-Impedir que os usuários sumam quando:
+Inclui:
 
-- reiniciar o serviço no Render;
-- fazer novo deploy;
-- atualizar código.
+- Login admin.
+- Cadastro de usuários.
+- Login do usuário com código + token.
+- Conectar GitHub do usuário via OAuth.
+- Salvar login/token GitHub no banco do usuário.
+- Desconectar GitHub.
+- Trocar GitHub.
 
-## Requisito no Render
+Não inclui ainda:
 
-Crie um PostgreSQL no Render e coloque no Web Service:
+- Listar repositórios.
+- Escolher repositório.
+- Índice.
+- Busca real.
+
+## Variáveis no Render
+
+Além das variáveis da v2.5, configure:
 
 ```env
-DATABASE_URL=postgres://...
-SESSION_SECRET=uma-chave-grande
-ADMIN_USER=admin
-ADMIN_PASSWORD=admin123
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+GITHUB_CALLBACK_URL=https://SEU-APP.onrender.com/auth/github/callback
 ```
 
-## Rodar local
+## GitHub OAuth App
 
-```bash
-npm install
-cp .env.example .env
-npm start
-```
-
-Para rodar local, você precisa de um PostgreSQL acessível em `DATABASE_URL`.
-
-## Login inicial
+No GitHub Developer Settings, o OAuth App do AVDC deve ter:
 
 ```txt
-admin
-admin123
+Homepage URL:
+https://SEU-APP.onrender.com
+
+Authorization callback URL:
+https://SEU-APP.onrender.com/auth/github/callback
 ```
 
-## Fluxo validado
+Localmente:
 
-1. Admin faz login.
-2. Admin cria usuário.
-3. Usuário loga com código + token.
-4. Novo deploy não apaga usuários, desde que `DATABASE_URL` esteja apontando para o PostgreSQL persistente.
+```txt
+Homepage URL:
+http://localhost:3000
 
-## Próxima etapa
+Authorization callback URL:
+http://localhost:3000/auth/github/callback
+```
 
-Depois de validar persistência:
+## Teste
 
-- Conexão GitHub por usuário.
-- Escolha de repositório.
-- Índice.
-- Busca.
+1. Admin cria usuário.
+2. Usuário loga com código + token.
+3. Usuário clica em Conectar GitHub.
+4. GitHub pede autorização.
+5. Usuário autoriza.
+6. AVDC volta para o painel e mostra a conta conectada.
+7. Testar Desconectar GitHub.
+8. Testar Trocar GitHub.

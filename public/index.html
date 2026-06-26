@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVDC v2.5 - Administração e Usuário</title>
+<title>AVDC v2.6 - GitHub Connect</title>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
 <div class="container login-container" id="login-screen">
-  <div class="version-badge">v2.5</div>
+  <div class="version-badge">v2.6</div>
 
   <h2>AVDC - Acesso</h2>
   <p>Admin administra. Usuário entra com código e token.</p>
@@ -43,13 +43,13 @@
 
   <div class="note">
     <p><strong>Escopo desta versão:</strong></p>
-    <p>Admin cria o usuário. Usuário valida acesso com código + token.</p>
-    <p>Banco agora usa PostgreSQL persistente. GitHub será a próxima etapa.</p>
+    <p>Usuário loga e conecta/desconecta/troca GitHub.</p>
+    <p>Ainda não lista repositórios.</p>
   </div>
 </div>
 
 <div class="container hidden" id="admin-screen">
-  <div class="version-badge">v2.5</div>
+  <div class="version-badge">v2.6</div>
 
   <div class="header">
     <div>
@@ -87,7 +87,7 @@
 
           <div class="note">
             <p>O cadastro do usuário pertence ao banco do AVDC.</p>
-            <p>GitHub ainda não entra nesta etapa.</p>
+            <p>A conexão GitHub é feita depois pelo próprio usuário.</p>
           </div>
         </div>
       </section>
@@ -157,8 +157,8 @@
 
           <div class="note">
             <p><strong>Etapa 1:</strong> Banco administrativo. OK.</p>
-            <p><strong>Etapa 2:</strong> Login do usuário comum. Esta versão.</p>
-            <p><strong>Etapa 3:</strong> Conexão GitHub por usuário.</p>
+            <p><strong>Etapa 2:</strong> Login do usuário comum. OK.</p>
+            <p><strong>Etapa 3:</strong> Conexão GitHub do usuário. Esta versão.</p>
             <p><strong>Etapa 4:</strong> Escolha de repositório.</p>
             <p><strong>Etapa 5:</strong> Índice e busca.</p>
           </div>
@@ -169,7 +169,7 @@
 </div>
 
 <div class="container hidden" id="user-screen">
-  <div class="version-badge">v2.5</div>
+  <div class="version-badge">v2.6</div>
 
   <div class="header">
     <div>
@@ -188,15 +188,34 @@
       <p><strong>Código:</strong> <span id="user-code-view" class="code">-</span></p>
       <p><strong>Status:</strong> <span class="badge badge-ok">ativo</span></p>
     </div>
-
-    <p>O usuário já está autenticado no AVDC usando código + token.</p>
-    <p>A próxima etapa será conectar o GitHub desse usuário.</p>
   </div>
 
   <div class="card">
-    <h3>GitHub</h3>
-    <p><span class="badge badge-warning">Em desenvolvimento</span></p>
-    <p>Nesta etapa ainda não há conexão GitHub. Primeiro estamos validando o login do usuário.</p>
+    <h3>Conexão GitHub</h3>
+    <p>Esta etapa apenas conecta, desconecta ou troca a conta GitHub do usuário.</p>
+
+    <div id="github-box" class="github-box">
+      <p><strong>Status:</strong> <span id="github-status-label" class="badge badge-warning">Não conectado</span></p>
+      <div id="github-profile" class="hidden">
+        <img id="github-avatar" class="avatar" src="" alt="Avatar GitHub">
+        <div>
+          <p><strong>Conta:</strong> <span id="github-login" class="code">-</span></p>
+          <p><strong>Nome:</strong> <span id="github-name">-</span></p>
+          <p><strong>Conectado em:</strong> <span id="github-connected-at">-</span></p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" id="btn-connect-github">Conectar GitHub</button>
+    <button class="btn btn-warning hidden" id="btn-change-github">Trocar GitHub</button>
+    <button class="btn btn-danger hidden" id="btn-disconnect-github">Desconectar GitHub</button>
+
+    <div id="github-msg" class="msg"></div>
+
+    <div class="note">
+      <p>O GitHub conectado fica salvo no banco do usuário.</p>
+      <p>Na próxima etapa vamos listar os repositórios desta conta.</p>
+    </div>
   </div>
 </div>
 
