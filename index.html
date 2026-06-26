@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVDC - Ambiente Virtual de Dados Conectados</title>
+    <style>
+        /* Variáveis de Tema - Ajuste com as cores do seu projeto antigo */
+        :root {
+            --bg-primary: #121214;
+            --bg-secondary: #202024;
+            --bg-tertiary: #29292e;
+            --text-main: #e1e1e6;
+            --text-muted: #8d8d99;
+            --accent-color: #00b37e; /* Verde estilo dev, mude se preferir */
+            --border-color: #323238;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- TELA DE LOGIN / CADASTRO --- */
+        .auth-container {
+            background-color: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: 1px solid var(--accent-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: #00875f; }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .auth-toggle span {
+            color: var(--accent-color);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* --- DASHBOARD PRINCIPAL --- */
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+        }
+
+        .logo h2 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-group h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-color);
+        }
+
+        .plugin-tag {
+            font-size: 0.7rem;
+            background-color: var(--bg-primary);
+            color: var(--text-muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            float: right;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: var(--bg-primary);
+        }
+
+        /* Seções da Interface */
+        .view-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        /* Campo de Busca e Resultados */
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.75rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .result-item {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-item a {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .result-item a:hover { text-decoration: underline; }
+
+        /* Configurações */
+        .config-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .config-card h4 { margin-bottom: 1rem; color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <div id="authView" class="auth-container">
+        <div id="loginBlock">
+            <div class="auth-header">
+                <h1>AVDC</h1>
+                <p>Entre com seu ID e Token Diário</p>
+            </div>
+            <div class="form-group">
+                <label>ID do Usuário</label>
+                <input type="text" id="loginId" placeholder="Ex: clayson.oliveira">
+            </div>
+            <div class="form-group">
+                <label>Token de Acesso Diário</label>
+                <input type="password" id="loginToken" placeholder="••••••••">
+            </div>
+            <button class="btn" onclick="login()">Entrar no Sistema</button>
+            <div class="auth-toggle">Novo por aqui? <span onclick="toggleAuth(true)">Criar Acesso</span></div>
+        </div>
+
+        <div id="registerBlock" class="hidden">
+            <div class="auth-header">
+                <h1>Novo Acesso</h1>
+                <p>Gere seu identificador único</p>
+            </div>
+            <div class="form-group">
+                <label>Escolha seu ID de Usuário</label>
+                <input type="text" id="regId" placeholder="Ex: clayson.oliveira">
+            </div>
+            <button class="btn" onclick="register()">Gerar Token e Salvar</button>
+            <div class="auth-toggle">Já possui acesso? <span onclick="toggleAuth(false)">Fazer Login</span></div>
+        </div>
+    </div>
+
+    <div id="appView" class="app-container hidden">
+        <div class="sidebar">
+            <div>
+                <div class="logo">
+                    <h2>AVDC Core</h2>
+                </div>
+                <div class="nav-group">
+                    <h3>Geral</h3>
+                    <div class="nav-item active" id="menuSearchBtn" onclick="switchView('search')">Pesquisa Avançada</div>
+                    <div class="nav-item" id="menuConfigBtn" onclick="switchView('config')">Configurações</div>
+                </div>
+                <div class="nav-group" style="margin-top: 2rem;">
+                    <h3>Plugins</h3>
+                    <div class="nav-item" style="color: var(--text-muted); cursor: not-allowed;">
+                        Mecanismo IA <span class="plugin-tag">Em dev</span>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                Conectado como: <span id="userDisplay" style="color: var(--accent-color);"></span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <div id="searchSection" class="view-section">
+                <h2>Pesquisa de Conhecimento</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Digite termos de busca nos seus repositórios indexados...">
+                    <button class="btn" style="width: auto; padding: 0 1.5rem;">Buscar</button>
+                </div>
+                
+                <h3>Resultados da Busca</h3>
+                <div class="results-list" style="margin-top: 1rem;">
+                    <div class="result-item">
+                        <h4>20260525fedoragpt.json</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Trecho: "...instruções sobre a atualização do KDE Plasma 6 no Fedora 44..."</p>
+                        <a href="https://github.com/Clayper/DadosRep/tree/main/chats/20260525fedoragpt.json" target="_blank">Abrir fonte original ↗</a>
+                    </div>
+                    <div class="result-item">
+                        <h4>20260625sambagpt.json</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Trecho: "...configuração de diretórios compartilhados utilizando o Samba..."</p>
+                        <a href="https://github.com/Clayper/DadosRep/tree/main/chats/20260625sambagpt.json" target="_blank">Abrir fonte original ↗</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="configSection" class="view-section hidden">
+                <h2>Estrutura de Repositórios</h2>
+                
+                <div class="config-card">
+                    <h4>1. Configuração do Repositório de Dados (Origem)</h4>
+                    <div class="form-group">
+                        <label>URL do Repositório do GitHub ou Caminho Local</label>
+                        <input type="text" id="repoDataPath" value="https://github.com/Clayper/DadosRep">
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <h4>2. Configuração do Diretório de Índice (Metadados Isolados)</h4>
+                    <div class="form-group">
+                        <label>Diretório Local/Separado para salvar Índices e Caches</label>
+                        <input type="text" id="indexDataPath" value="D:\PROJETOSHTML\avdc-core\storage\indices">
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        * Conforme as diretrizes: O índice é gerado estritamente dentro desta pasta controlada, nunca alterando os arquivos originais.
+                    </p>
+                </div>
+                <button class="btn" style="width: auto; padding: 0.75rem 2rem;" onclick="alert('Configurações salvas localmente!')">Salvar Configurações</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Alternar entre blocos de login e cadastro simplificado
+        function toggleAuth(isRegister) {
+            document.getElementById('loginBlock').classList.toggle('hidden', isRegister);
+            document.getElementById('registerBlock').classList.toggle('hidden', !isRegister);
+        }
+
+        // Fluxo simulado de Login utilizando ID + Senha/Token Diário
+        function login() {
+            const uid = document.getElementById('loginId').value;
+            const token = document.getElementById('loginToken').value;
+
+            if(!uid || !token) {
+                alert('Por favor, insira o seu ID e o Token Diário.');
+                return;
+            }
+
+            // Ativa visualização do sistema principal
+            document.getElementById('authView').classList.add('hidden');
+            document.getElementById('appView').classList.remove('hidden');
+            document.getElementById('userDisplay').innerText = uid;
+        }
+
+        // Fluxo simplificado de geração de ID
+        function register() {
+            const uid = document.getElementById('regId').value;
+            if(!uid) {
+                alert('Insira um ID válido.');
+                return;
+            }
+            alert(`Acesso criado para ${uid}! Use seu Token Diário gerado hoje para logar.`);
+            toggleAuth(false);
+        }
+
+        // Gerenciamento de abas/telas do Painel Principal
+        function switchView(viewName) {
+            const isSearch = viewName === 'search';
+            
+            document.getElementById('searchSection').classList.toggle('hidden', !isSearch);
+            document.getElementById('configSection').classList.toggle('hidden', isSearch);
+            
+            document.getElementById('menuSearchBtn').classList.toggle('active', isSearch);
+            document.getElementById('menuConfigBtn').classList.toggle('active', !isSearch);
+        }
+    </script>
+</body>
+</html>
