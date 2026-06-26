@@ -1,25 +1,25 @@
-# AVDC v2.4 - Banco Administrativo + Login do Usuário
+# AVDC v2.5 - PostgreSQL Persistente
 
-Esta versão valida a segunda etapa do projeto:
+Esta versão troca SQLite por PostgreSQL usando `DATABASE_URL`.
 
-- Sem GitHub.
-- Sem OAuth.
-- Sem repositório.
-- Sem índice.
-- Sem IA.
+## Objetivo
 
-Foco exclusivo:
+Impedir que os usuários sumam quando:
 
-- Banco administrativo do AVDC.
-- Login do admin.
-- Troca da senha do admin.
-- Cadastro de usuários.
-- Código único do usuário.
-- Token do usuário.
-- Listar usuários.
-- Ativar/inativar.
-- Regenerar token.
-- Excluir usuário.
+- reiniciar o serviço no Render;
+- fazer novo deploy;
+- atualizar código.
+
+## Requisito no Render
+
+Crie um PostgreSQL no Render e coloque no Web Service:
+
+```env
+DATABASE_URL=postgres://...
+SESSION_SECRET=uma-chave-grande
+ADMIN_USER=admin
+ADMIN_PASSWORD=admin123
+```
 
 ## Rodar local
 
@@ -29,60 +29,27 @@ cp .env.example .env
 npm start
 ```
 
-Acesse:
+Para rodar local, você precisa de um PostgreSQL acessível em `DATABASE_URL`.
 
-```txt
-http://localhost:3000
-```
-
-Login inicial:
+## Login inicial
 
 ```txt
 admin
 admin123
 ```
 
-## Banco
+## Fluxo validado
 
-Por padrão o banco é SQLite:
-
-```txt
-data/avdc.sqlite
-```
-
-Em ambiente como Render, se usar SQLite, é necessário usar disco persistente.
-Sem disco persistente, o arquivo do banco pode ser perdido em redeploy/restart.
+1. Admin faz login.
+2. Admin cria usuário.
+3. Usuário loga com código + token.
+4. Novo deploy não apaga usuários, desde que `DATABASE_URL` esteja apontando para o PostgreSQL persistente.
 
 ## Próxima etapa
 
-Depois que essa parte estiver validada, implementar:
+Depois de validar persistência:
 
-1. Login do usuário comum.
-2. Conexão GitHub.
-3. Escolha do repositório.
-4. Índice.
-5. Busca.
-6. IA como plugin opcional.
-
-
-## Novo na v2.4
-
-Agora o usuário comum também consegue logar usando:
-
-```txt
-Código do usuário
-Token gerado pelo admin
-```
-
-Fluxo:
-
-```txt
-Admin cria usuário
-Admin copia token
-Usuário entra na aba "Usuário comum"
-Usuário informa código + token
-Sistema valida no banco
-Usuário entra no painel próprio
-```
-
-Ainda não há GitHub nesta versão.
+- Conexão GitHub por usuário.
+- Escolha de repositório.
+- Índice.
+- Busca.

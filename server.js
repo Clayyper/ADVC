@@ -1,15 +1,14 @@
 /**
- * AVDC v2.4
- * Núcleo administrativo sem GitHub.
+ * AVDC v2.5
+ * Núcleo administrativo com PostgreSQL.
  *
- * Objetivo desta etapa:
- * - Criar banco persistente do AVDC.
- * - Criar login de administrador.
- * - Permitir troca da senha do admin.
- * - Cadastrar usuários com nome, código único e token.
- * - Listar, excluir e regenerar token de usuários.
+ * Objetivo:
+ * - Manter usuários persistentes entre deploys/restarts.
+ * - Usar DATABASE_URL do Render PostgreSQL.
+ * - Admin cria usuários.
+ * - Usuário valida login com código + token.
  *
- * GitHub, repositório, índice e IA ficam para etapas futuras.
+ * GitHub fica para a próxima etapa.
  */
 
 require("dotenv").config();
@@ -24,8 +23,6 @@ const adminRoutes = require("./src/routes/admin");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-initDatabase();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,11 +46,23 @@ app.get("/health", (req, res) => {
   res.json({
     ok: true,
     app: "AVDC",
-    version: "2.4.0",
-    module: "admin-db"
+    version: "2.5.0",
+    module: "admin-db-postgres",
+    database: process.env.DATABASE_URL ? "postgres" : "not-configured"
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`AVDC Admin DB v2.4 rodando na porta ${PORT}`);
-});
+async function start() {
+  try {
+    await initDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`AVDC Admin DB v2.5 rodando na porta ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Erro ao iniciar AVDC:", error);
+    process.exit(1);
+  }
+}
+
+start();

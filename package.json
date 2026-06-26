@@ -1,7 +1,7 @@
 {
   "name": "avdc-admin-db-v2-3",
-  "version": "2.4.0",
-  "description": "AVDC v2.4 - Admin DB com login de usuário por código e token",
+  "version": "2.5.0",
+  "description": "AVDC v2.5 - Admin e usuário com PostgreSQL persistente",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -9,9 +9,9 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "express-session": "^1.18.1"
+    "express-session": "^1.18.1",
+    "pg": "^8.13.1"
   }
 }
